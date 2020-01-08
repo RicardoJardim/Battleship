@@ -20,8 +20,12 @@
   "author": "Krunal Lathiya",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.1",
+    "embed-js": "^5.0.4",
     "express": "^4.16.2",
+    "mongodb": "^3.4.1",
+    "path": "^0.12.7",
     "socket.io": "^2.0.4"
   }
 }
