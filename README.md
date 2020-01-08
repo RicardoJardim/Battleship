@@ -13,12 +13,12 @@ Database server
 
 ### Node Modules
 
--> npm install  
--> npm install express --save
--> npm install body-parser --save
--> npm install path --save  
--> npm install mongodb --save
--> npm install --save ejs
+- npm install  
+- npm install express --save
+- npm install body-parser --save
+- npm install path --save  
+- npm install mongodb --save
+- npm install --save ejs
 
 # Rules
 
