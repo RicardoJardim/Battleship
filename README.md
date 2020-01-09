@@ -13,12 +13,13 @@ Database server
 
 ### Node Modules
 
-- npm install  
+- npm install
 - npm install express --save
 - npm install body-parser --save
-- npm install path --save  
+- npm install path --save
 - npm install mongodb --save
 - npm install --save ejs
+- npm i config joi express mongoose jsonwebtoken bcrypt
 
 # Rules
 

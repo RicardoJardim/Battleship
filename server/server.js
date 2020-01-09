@@ -5,12 +5,14 @@ var http = require("http");
 var bodyParser = require("body-parser");
 var ejs = require("ejs");
 var socketio = require("socket.io");
+const userController = require("./controller/UserController");
 
 //Utils
 var mongoUtil = require("./utils/mongoConnection");
 
 //Atribuições
 var app = express();
+app.use(express.json());
 var server = http.Server(app);
 
 var io = socketio(server);
@@ -42,6 +44,25 @@ io.sockets.on("connection", socket => {
 app.get("/", (req, res) => {
   var sendToServe = path.join(__dirname, "../client/index.html");
   res.sendFile(sendToServe);
+});
+
+app.get("/users", (req, res) => {
+  userController.getAllUsers(function(result) {
+    console.log(result.length);
+    res.json(result);
+  });
+});
+
+//Registo ta feito  Login +/-
+app.post("/register", (req, res) => {
+  userController.registerAuth(req.body, function(result) {
+    console.log(result);
+    if (result.success == false) {
+      res.json(result);
+    } else {
+      res.json({ authorization: result._token, data: result.data });
+    }
+  });
 });
 
 //Conexão a base de dados

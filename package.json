@@ -10,7 +10,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "nodemon": "^1.15.0"
+    "nodemon": "^1.19.4"
   },
   "keywords": [
     "Socket.io",
@@ -21,10 +21,14 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "config": "^3.2.4",
     "ejs": "^3.0.1",
     "embed-js": "^5.0.4",
     "express": "^4.16.2",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.4.1",
+    "mongoose": "^5.8.6",
     "path": "^0.12.7",
     "socket.io": "^2.0.4"
   }
