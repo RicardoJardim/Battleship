@@ -7,6 +7,8 @@ var ejs = require("ejs");
 var socketio = require("socket.io");
 const userController = require("./controller/UserController");
 
+const auth = require("./middleware/auth");
+
 //Utils
 var mongoUtil = require("./utils/mongoConnection");
 
@@ -46,21 +48,49 @@ app.get("/", (req, res) => {
   res.sendFile(sendToServe);
 });
 
-app.get("/users", (req, res) => {
+//Retorna todos os utilizadores
+app.get("/users", auth, (req, res) => {
   userController.getAllUsers(function(result) {
     console.log(result.length);
     res.json(result);
   });
 });
 
-//Registo ta feito  Login +/-
+//Verifica se está ativo para realizar logout
+app.post("/user/logged", auth, (req, res) => {
+  userController.verifyLogged(req.body, function(result) {
+    console.log(result);
+    res.json(result);
+  });
+});
+
+//REGISTO
 app.post("/register", (req, res) => {
   userController.registerAuth(req.body, function(result) {
     console.log(result);
     if (result.success == false) {
       res.json(result);
     } else {
-      res.json({ authorization: result._token, data: result.data });
+      res.json({
+        success: true,
+        authorization: result._token,
+        data: result.data
+      });
+    }
+  });
+});
+//LOGIN
+app.post("/login", (req, res) => {
+  userController.loginAuth(req.body, function(result) {
+    console.log(result);
+    if (result.success == false) {
+      res.json(result);
+    } else {
+      res.json({
+        success: result.success,
+        authorization: result._token,
+        data: result.data
+      });
     }
   });
 });

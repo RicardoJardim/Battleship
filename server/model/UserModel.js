@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
+//Esquema do Modelo
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -30,11 +31,13 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
+//Token para o modelo
 UserSchema.methods.generateAuthToken = function() {
   const token = jwt.sign({ _id: this._id }, config.get("myprivatekey"));
   return token;
 };
 
+//Atribuição do modelo
 const User = mongoose.model("User", UserSchema);
 
 //function to validate user
@@ -58,6 +61,7 @@ function validateUser(user) {
   return Joi.validate(user, schema);
 }
 
+//Função para criar um user
 function insertUser(data, callback) {
   var db = mongodb.getDB();
   var line = {
@@ -73,6 +77,7 @@ function insertUser(data, callback) {
   });
 }
 
+//retorna todos os users
 function getAllUsers(callback) {
   var db = mongodb.getDB();
   //console.log(db);
@@ -84,6 +89,7 @@ function getAllUsers(callback) {
     });
 }
 
+//procura se existe o user
 function findUser(data, callback) {
   var db = mongodb.getDB();
   var cursor = db.collection("users").findOne(data, function(err, result) {
@@ -95,8 +101,23 @@ function findUser(data, callback) {
   });
 }
 
+//login user
+function loginUser(data, callback) {
+  var db = mongodb.getDB();
+  var cursor = db
+    .collection("users")
+    .findOne(data, { projection: { password: 0 } }, function(err, result) {
+      if (result) {
+        callback({ success: true, data: result });
+      } else {
+        callback({ success: false, data: "Utilizador não encontrado" });
+      }
+    });
+}
+
 module.exports = {
   insertUser,
+  loginUser,
   getAllUsers,
   findUser,
   validateUser,

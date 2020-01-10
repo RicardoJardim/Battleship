@@ -6,7 +6,12 @@ module.exports = function(req, res, next) {
   const token = req.headers["authorization"];
   //if no token found, return response (without going to the next middelware)
   if (!token)
-    return res.status(401).send("Acesso não permitido, necessita da token");
+    return res
+      .status(401)
+      .json({
+        success: false,
+        message: "Acesso não permitido, necessita da token"
+      });
 
   try {
     //if can verify the token, set req.user and pass to next middleware
@@ -15,6 +20,6 @@ module.exports = function(req, res, next) {
     next();
   } catch (ex) {
     //if invalid token
-    res.status(400).send("Token invalida.");
+    res.status(400).send({ success: false, message: "Token invalida." });
   }
 };
