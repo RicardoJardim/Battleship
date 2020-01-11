@@ -112,27 +112,28 @@
                   <div class="card card-signin my-5">
                     <div class="card-body1">
                       <h4 class="card-title text-center">Register:</h4>
-                      <form class="form-signin">
+                      <form id="form_regist" method="" action="" class="form-signin">
                         <div class="form-label-group">
-                          <input type="text" id="inputUsername_register" class="form-control" placeholder="Username" required autofocus>
+                          <input type="text" id="inputUsername_register" name="Username" class="form-control" placeholder="Username" required autofocus>
                           <label for="inputUsername_register">Username</label>
                         </div>
 
                         <div class="form-label-group">
-                            <input type="email" id="inputEmail_register" class="form-control" placeholder="Email address" required autofocus>
+                            <input type="email" id="inputEmail_register" name="email" class="form-control" placeholder="Email address" required autofocus>
                             <label for="inputEmail_register">Email address</label>
                           </div>
           
                         <div class="form-label-group">
-                          <input type="password" id="inputPassword_register" class="form-control" placeholder="Password" required>
+                          <input type="password" id="inputPassword_register" name="password" class="form-control" placeholder="Password" required>
                           <label for="inputPassword_register">Password</label>
                         </div>
           
                     
-                        <button class="btn btn-lg btn-primary btn-block text-uppercase" id="register_btn" type="submit">Sign in</button>
-                        <hr class="my-4">
-                       
+                      
                       </form>
+                      <button class="btn btn-lg btn-primary btn-block text-uppercase" id="register_btn" type="submit">Sign in</button>
+                      <hr class="my-4">
+                     
                     </div>
                   </div>
                 </div>
