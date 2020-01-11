@@ -1,227 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link
-    rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
-    
+
     <title>Batleship</title>
-</head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+  </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 
-<style>
-     @import url('https://fonts.googleapis.com/css?family=Lobster');
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Lobster");
 
-    .body{
-       background-image: url(https://i.imgur.com/GPL5cPT.jpg);
-       background-repeat: no-repeat;
-       background-attachment: fixed;
-       background-size: cover;
-       height: 100vh;
-      
+    .body {
+      background-image: url(https://i.imgur.com/GPL5cPT.jpg);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      height: 100vh;
     }
-         .test{
-            margin-top: 0%;
-            padding-top: 5%;
-            text-align: center;
-            font-size: 100px;
-            font-family: Lobster, cursive;
-            text-align: center;
-            color: rgb(255, 255, 255);
-           
-            text-shadow: rgb(0, 0, 0) 2px 2px 2px;
+    .test {
+      margin-top: 0%;
+      padding-top: 5%;
+      text-align: center;
+      font-size: 100px;
+      font-family: Lobster, cursive;
+      text-align: center;
+      color: rgb(255, 255, 255);
 
-
-        }
-        .body .container_test{
-            margin-left: auto;
-            margin-right: auto;
-            display: flex; 
-            width: 80%;
+      text-shadow: rgb(0, 0, 0) 2px 2px 2px;
     }
+    .body .container_test {
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      width: 80%;
+    }
+  </style>
 
-</style>
-
-<body>
+  <body>
     <div class="body">
-        <h1 class="test">Age of BattleShip 2</h1>
-        <div class="container_test">
-          
-            <%- include('partials/user_partial') %>
-        
-            <%- include('partials/register_partial') %>
-       
-        </div>
-    </div>  
-</body>
-<script>
+      <h1 class="test">Age of BattleShip 2</h1>
+      <div class="container_test">
+        <%- include('partials/user_partial') %> <%-
+        include('partials/register_partial') %>
+      </div>
+    </div>
+  </body>
+  <script>
+    $("#user_btn").click(sendLogin);
+    $("#register_btn").click(sendRegister);
 
-$("#user_btn").click(sendProfile);
-$("#register_btn").click(sendRegister);
+    function sendRegister() {
+      var not_empty = [];
+      var valid = [];
 
+      valores = [];
+      elementos = [];
 
-
-function sendRegister() {
- 
- var not_empty = [];
- var valid = [];
-
- valores = [];
- elementos = [];
-
- valores.push(
-    form_regist.Username.value,
-    form_regist.email.value,
-    form_regist.password.value,
-   
- );
- elementos.push(
-    form_regist.Username,
-    form_regist.email,
-    form_regist.password,
- );
-
- removeMessages(".form-label-group");
- valid.push(validString(form_regist.Username.value, form_regist.Username));
- valid.push(validateEmail(form_regist.email.value, form_regist.email));
- valid.push(validString(form_regist.password.value, form_regist.password));
-
- for (var i = 0; i < valores.length; i++) {
-     not_empty.push(validateEmpty(valores[i], elementos[i]));
-     
- }
-
- if (valid.reduce(and) && not_empty.reduce(and)) {
-    console.log("entrou");
-      postRegister(
+      valores.push(
         form_regist.Username.value,
         form_regist.email.value,
-        form_regist.password.value,     
-     );
- }
-}   
+        form_regist.password.value
+      );
+      elementos.push(
+        form_regist.Username,
+        form_regist.email,
+        form_regist.password
+      );
 
- 
+      removeMessages(".form-label-group");
+      valid.push(validString(form_regist.Username.value, form_regist.Username));
+      valid.push(validateEmail(form_regist.email.value, form_regist.email));
+      valid.push(validString(form_regist.password.value, form_regist.password));
 
-function postRegister(username,email, password) {
-    var content = {
-        name: username,
-        email, email,
-        password: password,
-    };
-  
-    console.log(content);
-
-    
-    /*$.post("/register", content, function(req,res) {
-       
-    }); */
-
-   
-}
-
-
-function sendProfile() {
- 
-    var not_empty = [];
-    var valid = [];
-
-    valores = [];
-    elementos = [];
-
-    valores.push(
-        form_login.email.value,
-        form_login.password.value,
-      
-    );
-    elementos.push(
-        form_login.email,
-        form_login.password,
-    );
-
-    removeMessages(".form-label-group");
-    valid.push(validateEmail(form_login.email.value, form_login.email));
-    valid.push(validString(form_login.password.value, form_login.password));
-
-    for (var i = 0; i < valores.length; i++) {
+      for (var i = 0; i < valores.length; i++) {
         not_empty.push(validateEmpty(valores[i], elementos[i]));
-        
+      }
+
+      if (valid.reduce(and) && not_empty.reduce(and)) {
+        console.log("entrou");
+
+        var content = {
+          name: form_regist.Username.value,
+          email: form_regist.email.value,
+          password: form_regist.password.value
+        };
+        postData("/register", content);
+      }
     }
 
-    if (valid.reduce(and) && not_empty.reduce(and)) {
-       console.log("entrou");
-         postProfile(
-            form_login.email.value,
-            form_login.password.value,        
-        );
-    }
-}
+    function sendLogin() {
+      var not_empty = [];
+      var valid = [];
 
-function postProfile(email, password) {
-    var content = {
-        email: email,
-        password: password
-    };
-    console.log(content);
-    $.post("/login", content, function(data)  {
+      valores = [];
+      elementos = [];
+
+      valores.push(form_login.email.value, form_login.password.value);
+      elementos.push(form_login.email, form_login.password);
+
+      removeMessages(".form-label-group");
+      valid.push(validateEmail(form_login.email.value, form_login.email));
+      valid.push(validString(form_login.password.value, form_login.password));
+
+      for (var i = 0; i < valores.length; i++) {
+        not_empty.push(validateEmpty(valores[i], elementos[i]));
+      }
+
+      if (valid.reduce(and) && not_empty.reduce(and)) {
+        console.log("entrou");
+        var content = {
+          email: form_login.email.value,
+          password: form_login.password.value
+        };
+        postData("/login", content);
+      }
+    }
+
+    function postData(url, content) {
+      console.log(content);
+      $.post(url, content, function(data) {
+        if (data.success == false) {
+          alert(data.message);
+        } else {
+          window.location = "/chose";
+
+          localStorage.setItem("authorization", data.authorization);
+
+          //VAI BUSCAR
+          // console.log(localStorage.getItem("authorization"));
+        }
         console.log(data);
-    });
+      });
+    }
 
-   
-}
-
-function validateEmpty(content, element) {
-    if (content == "") {
+    function validateEmpty(content, element) {
+      if (content == "") {
         $(element).css("background", "#ffcccc");
         $(element).attr("placeholder", "Campo abrigatório");
         return false;
-    } else {
+      } else {
         return true;
+      }
     }
-}
 
-
-function validateEmail(content, element) {
-    if (!content.match(/^[a-zA-Z0-9]*@[a-z]*\.(com|pt|org)$/)) {
+    function validateEmail(content, element) {
+      if (!content.match(/^[a-zA-Z0-9]*@[a-z]*\.(com|pt|org)$/)) {
         $(element).css("background-color", "#ebdf5e");
         $(element).after(
-            '<p style="color:#c2b100"> Formatação de email incorrecta </p>'
+          '<p style="color:#c2b100"> Formatação de email incorrecta </p>'
         );
         return false;
-    } else {
+      } else {
         return true;
+      }
     }
-}
 
-function validString(content, element) {
-    if (!content.match(/^[a-zA-Z0-9]+/)) {
+    function validString(content, element) {
+      if (!content.match(/^[a-zA-Z0-9]+/)) {
         $(element).css("background-color", "#ebdf5e");
         $(element).after(
-            '<p style="color:red;margin:0px"> Formatação de campo incorrecta </p>'
+          '<p style="color:red;margin:0px"> Formatação de campo incorrecta </p>'
         );
         return false;
-    } else {
+      } else {
         return true;
+      }
     }
-}
 
-function and(a, b) {
-    return a && b;
-}
+    function and(a, b) {
+      return a && b;
+    }
 
-function removeMessages(string) {
- 
-    $(string)
+    function removeMessages(string) {
+      $(string)
         .children()
         .filter("p")
         .remove();
-}
-
-
-
-</script>
+    }
+  </script>
 </html>

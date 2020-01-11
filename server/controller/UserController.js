@@ -21,7 +21,10 @@ function verifyLogged(body, callback) {
 function registerAuth(body, callback) {
   const { error } = user.validateUser(body);
   if (error)
-    return callback({ success: false, message: error.details[0].message });
+    return callback({
+      success: false,
+      message: " " + error.details[0].message + ""
+    });
 
   user.findUser({ email: body.email }, function(data) {
     console.log(data);
