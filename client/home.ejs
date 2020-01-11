@@ -56,6 +56,7 @@
     $("#register_btn").click(sendRegister);
 
     function sendRegister() {
+      changeroute();
       var not_empty = [];
       var valid = [];
 
@@ -95,6 +96,7 @@
     }
 
     function sendLogin() {
+      changeroute();
       var not_empty = [];
       var valid = [];
 
@@ -128,10 +130,8 @@
         if (data.success == false) {
           alert(data.message);
         } else {
-          window.location = "/chose";
-
           localStorage.setItem("authorization", data.authorization);
-
+          changeroute();
           //VAI BUSCAR
           // console.log(localStorage.getItem("authorization"));
         }
@@ -182,6 +182,26 @@
         .children()
         .filter("p")
         .remove();
+    }
+    function changeroute() {
+      var token = localStorage.getItem("authorization");
+      if (token) {
+        $.ajax({
+          url: "/chose",
+          async: false,
+          type: "GET",
+          headers: {
+            authorization: token
+          },
+          success: function(data) {
+            console.log(data);
+            document.location.href = "/chose";
+          }
+        });
+      } else {
+        console.log("No permissions");
+        return;
+      }
     }
   </script>
 </html>
