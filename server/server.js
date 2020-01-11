@@ -5,6 +5,7 @@ var http = require("http");
 var bodyParser = require("body-parser");
 var ejs = require("ejs");
 var socketio = require("socket.io");
+var urlParser = bodyParser.urlencoded({ extended: false });
 
 const userController = require("./controller/UserController");
 
@@ -19,17 +20,20 @@ app.use(express.json());
 var server = http.Server(app);
 
 var io = socketio(server);
-
+app.use(urlParser);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../client"));
 
 console.log("Server is running");
 
 //Variáveis
+
 const users = [];
 const connections = [];
 
 io.sockets.on("connection", socket => {
+  console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
+
   connections.push(socket);
   console.log(" %s sockets is connected", connections.length);
 

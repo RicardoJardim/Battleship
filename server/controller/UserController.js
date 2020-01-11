@@ -47,7 +47,7 @@ function loginAuth(body, callback) {
   user.loginUser({ email: body.email, password: hash }, function(data) {
     console.log(data);
     if (data.success == true) {
-      newUser = new user.User({
+      var newUser = new user.User({
         id: data.data._id,
         name: data.data.name,
         email: data.data.email,
@@ -82,7 +82,7 @@ module.exports = {
 
 //FUNÇÂO PARA AJUDAR NO REGISTO
 function helperfunction(data, callback) {
-  newUser = new user.User({
+  var newUser = new user.User({
     name: data.name,
     password: data.password,
     email: data.email,
