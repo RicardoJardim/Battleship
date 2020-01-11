@@ -5,6 +5,7 @@ var http = require("http");
 var bodyParser = require("body-parser");
 var ejs = require("ejs");
 var socketio = require("socket.io");
+
 const userController = require("./controller/UserController");
 
 const auth = require("./middleware/auth");
@@ -20,7 +21,7 @@ var server = http.Server(app);
 var io = socketio(server);
 
 app.set("view engine", "ejs");
-app.set('views', path.join(__dirname, '../client'));
+app.set("views", path.join(__dirname, "../client"));
 
 console.log("Server is running");
 
@@ -51,6 +52,14 @@ app.get("/socket", (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("home");
+});
+
+app.get("/chose", (req, res) => {
+  res.render("choseGame");
+});
+
+app.get("/game", (req, res) => {
+  res.render("game");
 });
 
 //Retorna todos os utilizadores

@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link
-    rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
-    
+
     <title>Batleship</title>
-</head>
-<style>
-     @import url('https://fonts.googleapis.com/css?family=Lobster');
+  </head>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Lobster");
 
-    .body{
-       background-image: url(https://i.imgur.com/GPL5cPT.jpg);
-       background-repeat: no-repeat;
-       background-attachment: fixed;
-       background-size: cover;
-       height: 100vh;
-      
+    .body {
+      background-image: url(https://i.imgur.com/GPL5cPT.jpg);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      height: 100vh;
     }
-         .test{
-            margin-top: 0%;
-            padding-top: 5%;
-            text-align: center;
-            font-size: 100px;
-            font-family: Lobster, cursive;
-            text-align: center;
-            color: rgb(255, 255, 255);
-           
-            text-shadow: rgb(0, 0, 0) 2px 2px 2px;
+    .test {
+      margin-top: 0%;
+      padding-top: 5%;
+      text-align: center;
+      font-size: 100px;
+      font-family: Lobster, cursive;
+      text-align: center;
+      color: rgb(255, 255, 255);
 
-
-        }
-        .body .container_test{
-            margin-left: auto;
-            margin-right: auto;
-            display: flex; 
-            width: 80%;
+      text-shadow: rgb(0, 0, 0) 2px 2px 2px;
     }
+    .body .container_test {
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      width: 80%;
+    }
+  </style>
 
-</style>
-
-<body>
+  <body>
     <div class="body">
-        <h1 class="test">Age of BattleShip 2</h1>
-        <div class="container_test">
-          
-            <%- include('partials/user_partial') %>
-        
-            <%- include('partials/register_partial') %>
-    
-    
-        </div>
+      <h1 class="test">Age of BattleShip 2</h1>
+      <div class="container_test">
+        <%- include('partials/user_partial') %> <%-
+        include('partials/register_partial') %>
+      </div>
     </div>
-    
-</body>
+  </body>
 </html>
