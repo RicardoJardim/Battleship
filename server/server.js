@@ -20,6 +20,7 @@ var server = http.Server(app);
 var io = socketio(server);
 
 app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, '../client'));
 
 console.log("Server is running");
 
@@ -43,9 +44,13 @@ io.sockets.on("connection", socket => {
 });
 
 //Routes
-app.get("/", (req, res) => {
+app.get("/socket", (req, res) => {
   var sendToServe = path.join(__dirname, "../client/index.html");
   res.sendFile(sendToServe);
+});
+
+app.get("/", (req, res) => {
+  res.render("home");
 });
 
 //Retorna todos os utilizadores
