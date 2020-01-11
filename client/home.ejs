@@ -187,15 +187,17 @@
       var token = localStorage.getItem("authorization");
       if (token) {
         $.ajax({
-          url: "/chose",
-          async: false,
+          url: "/verify",
+          async: true,
           type: "GET",
           headers: {
             authorization: token
           },
           success: function(data) {
             console.log(data);
-            document.location.href = "/chose";
+            if (data.success == true) {
+              window.location = "/chose/" + token;
+            }
           }
         });
       } else {

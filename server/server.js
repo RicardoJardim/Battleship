@@ -58,8 +58,14 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/chose", (req, res) => {
-  res.render("choseGame");
+app.get("/verify", auth, (req, res) => {
+  res.json({ success: true });
+});
+
+app.get("/chose/:token", (req, res) => {
+  if (req.params.token) {
+    res.render("choseGame");
+  }
 });
 
 app.get("/game", (req, res) => {
