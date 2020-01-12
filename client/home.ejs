@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.imgur.com/mvPmzAP.png" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -9,7 +10,7 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
     />
 
-    <title>Batleship</title>
+    <title>Battleship</title>
   </head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 
@@ -55,6 +56,7 @@
     $("#user_btn").click(sendLogin);
     $("#register_btn").click(sendRegister);
 
+    
     function sendRegister() {
       changeroute();
       var not_empty = [];
@@ -198,6 +200,9 @@
             if (data.success == true) {
               window.location = "/chose/" + token;
             }
+          },
+          error: function(data){
+            console.log(data);
           }
         });
       } else {

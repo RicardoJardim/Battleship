@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.imgur.com/mvPmzAP.png" />
+    <title>Battleship</title>
+   
+</head>
+
+<style>
+    #background{
+        background-image: url(https://i.imgur.com/yVelP37.jpg);
+        background-position-y: 15%;
+        background-position-x: 15%;
+    }
+    body{
+        margin: 0%;
+    }
+    /* The Modal (background) */
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 20%; /* Could be more or less, depending on screen size */
+    height: 30%;
+    }
+
+    /* The Close Button */
+    .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    }
+
+
+/* -----------------------------------------
+  =Default css to make the demo more pretty
+-------------------------------------------- */
+
+.clear {clear:both;}
+
+/* -----------------------------------------
+  =CSS3 Loading animations
+-------------------------------------------- */
+
+.ring-1 {
+    width: 6em;
+    height: 6em;
+    margin: 0 auto;
+    padding: 10px;
+    border: 8px dashed #4b9cdb;
+    border-radius: 100%;
+   
+}
+
+.load-4 p{
+   font-size: larger;
+   text-align: center;
+}
+
+
+/* =Animate the stuff
+------------------------ */
+
+.load-4 .ring-1 {
+    animation: loadingD 2s .3s cubic-bezier(.17,.37,.43,.67) infinite;
+    }
+
+@keyframes loadingD {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(180deg);}
+    100% {transform: rotate(360deg);}
+}
+
+</style>
+
+
+<body  id="background">
+    
+
+<%- include('partials/1vs1') %>
+
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+        <div class="load-4">
+            <p>Looking for an enemy...</p>
+            <div class="ring-1"></div>
+        </div>
+        <div class="clear"></div>
+  </div>
+
+</div>   
+</body>
+<script>
+    $("#umvsum").click(Play1vs1);
+    $("#tourn").click(PlayTournament);
+
+
+function Play1vs1(){
+   // alert("Bora jogar!!");
+
+        var id = this.id;
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+                    
+            var span = document.getElementsByClassName("close")[0];
+            
+            span.onclick = function() {
+                modal.style.display = "none";
+            };
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+}
+  
+function PlayTournament(){
+    alert("Bora jogar Tournament!!");
+}
+
+</script>
+</html>
