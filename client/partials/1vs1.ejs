@@ -56,7 +56,7 @@ button{color:#fff;height: 5em;}
 .test23{
     display:flex;
     flex-flow: column;
-    margin-top: 7%;
+    margin-top: 3%;
     margin-left: 3%;
     width: 40%;
     flex: 1;
@@ -83,22 +83,33 @@ hr{
            <div class="shine"></div>
            <div class="text-block">
               <h1>Age of Battleships 2</h1>
-              <h3>Welcome to Age of Battleships 2</h3>
-              <p>
-                
-              </p>
+              <h2>Welcome to Age of Battleships 2</h2>
+              <h3 id="username"> Username : </h3>
+              <h3 id="points"> Points: </h3>
               <br>
               <div class="test23">
                 <button id="umvsum">Play</button>
                 <hr>
-                <button id="tourn">Play maricas tournament</button>
+                <button id="tourn">Play tournament</button>
+                <hr>
               </div>
-              
+              <br>
+              <button id="logout">
+                Logout
+            </button>
            </div>
         </div>
      </div>
 
 <script>
+
+var username = localStorage.getItem("username");
+var points = localStorage.getItem("points");
+var email = localStorage.getItem("email");
+
+$("#username").append(username);
+$("#points").append(points);
+ 
 
 var $poster = $('#card-container'),
   $shine = $('.shine'),

@@ -7,8 +7,13 @@
       href="https://i.imgur.com/mvPmzAP.png"
     />
     <title>Battleship</title>
+    <script type="text/javascript"> 
+        window.history.forward(); 
+        function noBack() { 
+            window.history.forward(); 
+        } 
+    </script>
   </head>
-
   <style>
     #background {
       background-image: url(https://i.imgur.com/yVelP37.jpg);
@@ -124,8 +129,18 @@
         <div class="clear"></div>
       </div>
     </div>
+
+  
+
   </body>
   <script>
+
+    history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+
+
     var x = document.getElementById("myaudio2");
     setInterval(function() {
       playAudio();
@@ -133,6 +148,7 @@
 
     $("#umvsum").click(Play1vs1);
     $("#tourn").click(PlayTournament);
+    $("#logout").click(Logout);
 
     function Play1vs1() {
       // alert("Bora jogar!!");
@@ -156,6 +172,35 @@
 
     function PlayTournament() {
       alert("Bora jogar Tournament!!");
+    }
+
+//logout
+    function Logout(){
+        var token = localStorage.getItem("authorization");
+        var email = localStorage.getItem("email");
+      if (token) {
+        $.ajax({
+          url: "/user/logged",
+          async: true,
+          type: "POST",
+          data: {email: email},
+          headers: {
+            authorization: token
+          },
+          success: function(data) {
+            console.log(data);
+            if (data.success == true) {
+              window.location = "/" ;
+              localStorage.clear();
+            }
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });}else{
+            window.location = "/" ;
+            localStorage.clear();
+        }
     }
 
     function playAudio() {

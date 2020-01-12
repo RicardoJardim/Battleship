@@ -59,9 +59,7 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/verify", auth, (req, res) => {
-  res.json({ success: true });
-});
+
 
 app.get("/chose/:token", (req, res) => {
   if (req.params.token) {
@@ -118,6 +116,10 @@ app.post("/login", (req, res) => {
       });
     }
   });
+});
+
+app.get("/verify", auth, (req, res) => {
+  res.json({ success: true });
 });
 
 //Conexão a base de dados
