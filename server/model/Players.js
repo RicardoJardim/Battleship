@@ -1,6 +1,8 @@
 const { Ship, GameSetting } = require("./ShipsAndMore.js");
 
+//Classe Player
 class Player {
+  //ID -> SOCKET.ID
   constructor(id) {
     var i;
     this.id = id;
@@ -8,41 +10,45 @@ class Player {
     this.shipGrid = Array(GameSetting.gridRows * GameSetting.gridCols);
     this.ships = [];
 
+    //0 -> NAO EXPLORADO  1-> ATIROU E FALHOU   -1 -> POSICAO DOS BARCOS
     for (i = 0; i < GameSetting.gridRows * GameSetting.gridCols; i++) {
       this.shots[i] = 0;
       this.shipGrid[i] = -1;
     }
 
+    //RANDOM DAS POSIÇÕES, CASO FALHE REALIZA MAIS UMA VEZ
     if (!this.createRandomShips()) {
-      // Random placement of ships failed. Use fallback layout (should rarely happen).
       this.ships = [];
       this.createShips();
     }
   }
+  //TIRO NO ADVERSÁRIO
   shoot(gridIndex) {
     if (this.shipGrid[gridIndex] >= 0) {
-      // Hit!
+      //ACERTOU NO BARCO ADVERSÁRIO
       this.ships[this.shipGrid[gridIndex]].hits++;
       this.shots[gridIndex] = 2;
       return true;
     } else {
-      // Miss
+      //FALHOU
       this.shots[gridIndex] = 1;
       return false;
     }
   }
+  //TODOS OS BARCOS QUE SE AFUNDARAM
   getSunkShips() {
     var i,
       sunkShips = [];
 
     for (i = 0; i < this.ships.length; i++) {
-      if (this.ships[i].isSunk()) {
+      if (this.ships[i].Morreu()) {
         sunkShips.push(this.ships[i]);
       }
     }
 
     return sunkShips;
   }
+  //CRIA BARCOS NA GRID
   createShips() {
     var shipIndex,
       i,
@@ -68,6 +74,7 @@ class Player {
       this.ships.push(ship);
     }
   }
+  //VERIFICA BARCOS A VOLTA
   checkShipAdjacent() {
     var i,
       j,
@@ -88,6 +95,7 @@ class Player {
 
     return false;
   }
+  //VERIFICA SE O BARCO ESTÁ EM CIMA DO OUTRO
   checkShipOverlap(ship) {
     var i,
       gridIndex = ship.y * GameSetting.gridCols + ship.x;
@@ -101,18 +109,20 @@ class Player {
 
     return false;
   }
+  //BARCOS QUE FALTAM MORRER
   getShipsLeft() {
     var i,
       shipCount = 0;
 
     for (i = 0; i < this.ships.length; i++) {
-      if (!this.ships[i].isSunk()) {
+      if (!this.ships[i].Morreu()) {
         shipCount++;
       }
     }
 
     return shipCount;
   }
+  //CRIA OS BARCOS RANDOM
   createRandomShips() {
     var shipIndex;
 
@@ -128,6 +138,7 @@ class Player {
 
     return true;
   }
+  //METE OS BARCO RANDOM
   placeShipRandom(ship, shipIndex) {
     var i,
       j,

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="shortcut icon" type="image/x-icon" href="https://i.imgur.com/mvPmzAP.png" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="https://i.imgur.com/mvPmzAP.png"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -44,6 +48,13 @@
   </style>
 
   <body>
+    <audio autoplay id="myAudio">
+      <source
+        src="https://dc552.4shared.com/img/gvYdGGq_ea/1fb2fd08/dlink__2Fdownload_2FgvYdGGq_5Fea_2Fsound.mp3_3Fsbsr_3Dea46b84a7888e9382d511b1e3fe05d00a32_26bip_3DMTkzLjEzNi4yMzIuNA_26lgfp_3D52_26bip_3DMTkzLjEzNi4yMzIuNA/preview.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
     <div class="body">
       <h1 class="test">Age of BattleShip 2</h1>
       <div class="container_test">
@@ -53,10 +64,14 @@
     </div>
   </body>
   <script>
+    var x = document.getElementById("myAudio");
+    console.log(x);
     $("#user_btn").click(sendLogin);
     $("#register_btn").click(sendRegister);
+    setInterval(function() {
+      playAudio2();
+    }, 10);
 
-    
     function sendRegister() {
       changeroute();
       var not_empty = [];
@@ -201,7 +216,7 @@
               window.location = "/chose/" + token;
             }
           },
-          error: function(data){
+          error: function(data) {
             console.log(data);
           }
         });
@@ -209,6 +224,10 @@
         console.log("No permissions");
         return;
       }
+    }
+
+    function playAudio2() {
+      x.play();
     }
   </script>
 </html>

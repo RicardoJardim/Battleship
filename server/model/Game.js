@@ -1,7 +1,10 @@
 var Player = require("./Player.js");
 const { GameStatus, GameSetting } = require("./ShipsAndMore.js");
 
+//CLASS GAME
 class Game {
+  //ID -> ID DO JOGO
+  //IDPLAYER -> SOCKETID
   constructor(id, idPlayer1, idPlayer2) {
     this.id = id;
     this.currentPlayer = Math.floor(Math.random() * 2);
@@ -9,15 +12,18 @@ class Game {
     this.gameStatus = GameStatus.inProgress;
     this.players = [new Player(idPlayer1), new Player(idPlayer2)];
   }
+  //ID DO PLAYER
   getPlayerId(player) {
     return this.players[player].id;
   }
+  //ID DO VENCEDOR
   getWinnerId() {
     if (this.winningPlayer === null) {
       return null;
     }
     return this.players[this.winningPlayer].id;
   }
+  //ID DO PERDEDOR
   getLoserId() {
     var loser;
     if (this.winningPlayer === null) {
@@ -31,6 +37,7 @@ class Game {
     return this.players[loser].id;
   }
 
+  //MUDA DE JOGADOR
   switchPlayer() {
     var current;
     if (this.currentPlayer == 0) {
@@ -41,6 +48,7 @@ class Game {
     this.currentPlayer = current;
   }
 
+  //SAI DO JOGO
   abortGame(player) {
     this.gameStatus = GameStatus.gameOver;
     var winner;
@@ -51,6 +59,8 @@ class Game {
     }
     this.winningPlayer = winner;
   }
+
+  //DISPARA PARA A POSIÇÃO QUE QUER
   shoot(position) {
     var opponent = this.currentPlayer === 0 ? 1 : 0,
       gridIndex = position.y * GameSetting.gridCols + position.x;
@@ -80,6 +90,7 @@ class Game {
 
     return false;
   }
+  //eSTADO DO JOGO
   getGameState(player, gridOwner) {
     var gridAux;
     if (gridOwner == player) {
@@ -91,6 +102,7 @@ class Game {
       grid: this.getGrid(gridOwner, player !== gridOwner)
     };
   }
+  //GRID
   getGrid(player, hideShips) {
     return {
       shots: this.players[player].shots,

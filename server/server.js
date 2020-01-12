@@ -17,6 +17,7 @@ var mongoUtil = require("./utils/mongoConnection");
 //Atribuições
 var app = express();
 app.use(express.json());
+
 var server = http.Server(app);
 
 var io = socketio(server);
