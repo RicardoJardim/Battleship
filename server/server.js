@@ -16,8 +16,8 @@ const auth = require("./middleware/auth");
 
 //Game
 
-const { GameStatus } = require("./model/ShipsAndMore.js");
-const { Game } = require("./model/Game");
+const { GameStatus } = require("./GameData/ShipsAndMore.js");
+const { Game } = require("./GameData/Game");
 
 //Controllers
 const userController = require("./controller/UserController");
@@ -44,24 +44,7 @@ console.log("Server is running");
 var users = {};
 var gameIdCounter = 1;
 const connections = [];
-/*
-io.sockets.on("connection", socket => {
-  console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
 
-  connections.push(socket);
-  console.log(" %s sockets is connected", connections.length);
-
-  socket.on("disconnect", () => {
-    connections.splice(connections.indexOf(socket), 1);
-  });
-
-  socket.on("sending message", message => {
-    console.log("Message is received :", message);
-
-    io.sockets.emit("new message", { message: message });
-  });
-});
-*/
 io.sockets.on("connection", socket => {
   console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
 
@@ -284,6 +267,21 @@ app.get("/user/:email", auth, (req, res) => {
   });
 });
 
+app.get("/leaderboard/:token", (req, res) => {
+  if (req.params.token) {
+    userController.orderPoints(function(result) {
+      console.log(result);
+      res.render("leaderboard", { data: result });
+    });
+  }
+});
+
+app.get("/placeships/:token", (req, res) => {
+  if (req.params.token) {
+    res.render("placeships");
+  }
+});
+
 //Conexão a base de dados
 //Instancia o servidor
 mongoUtil.connectToServer(function(err) {
@@ -292,6 +290,7 @@ mongoUtil.connectToServer(function(err) {
   });
 });
 
+//SAIO DO JOGO
 function leaveGame(socket) {
   console.log(users[socket.id]);
   if (users[socket.id].inGame !== null) {
@@ -331,6 +330,7 @@ function leaveGame(socket) {
   }
 }
 
+//VERIFICA SE JA ACABOU O JOGO
 function checkGameOver(game) {
   if (game.gameStatus === GameStatus.gameOver) {
     console.log(new Date().toISOString() + " Game ID " + game.id + " ended.");
@@ -339,12 +339,14 @@ function checkGameOver(game) {
   }
 }
 
+//APENAS VE OS CLIENTES NA ROOM
 function seeClients(strings) {
   io.of("/").adapter.clients([strings], (err, clients) => {
     console.log(clients);
   });
 }
 
+//RETORNA TODOS OS CLIENTES DA ROOM ESPECIFICA
 function getClientsInRoom(string) {
   var clientsArray = [];
   for (var id in io.sockets.adapter.rooms[string]) {
@@ -355,3 +357,22 @@ function getClientsInRoom(string) {
 
   return keys;
 }
+
+/*
+io.sockets.on("connection", socket => {
+  console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
+
+  connections.push(socket);
+  console.log(" %s sockets is connected", connections.length);
+
+  socket.on("disconnect", () => {
+    connections.splice(connections.indexOf(socket), 1);
+  });
+
+  socket.on("sending message", message => {
+    console.log("Message is received :", message);
+
+    io.sockets.emit("new message", { message: message });
+  });
+});
+*/

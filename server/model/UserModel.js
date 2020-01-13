@@ -138,6 +138,17 @@ function findPointsModel(email, callback) {
     });
 }
 
+function getAllPoints(callback) {
+  var db = mongodb.getDB();
+  var cursor = db
+    .collection("users")
+    .find({}, { projection: { password: 0, email: 0 } })
+    .sort({ points: -1 })
+    .toArray(function(err, result) {
+      if (!err) callback(result);
+    });
+}
+
 module.exports = {
   insertUser,
   loginUser,
@@ -146,5 +157,6 @@ module.exports = {
   validateUser,
   updatePointsModel,
   findPointsModel,
+  getAllPoints,
   User
 };

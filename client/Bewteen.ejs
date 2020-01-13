@@ -4,9 +4,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
   <head>
     <link
-    rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-  />
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
     <link
       rel="shortcut icon"
       type="image/x-icon"
@@ -25,11 +25,10 @@
       display: block;
     }
     #show {
-      display: none;   
+      display: none;
     }
   </style>
 
- 
   <body id="background">
     <div id="hide">
       <%- include('partials/choseGame') %>
@@ -39,41 +38,43 @@
     </div>
   </body>
 
-
   <script>
-      var username = localStorage.getItem("username");
-      var email = localStorage.getItem("email");
-      var points = localStorage.getItem("points");
-     
-      var token = localStorage.getItem("authorization");
-      if (token) {
-        $.ajax({
-          url: "/user/"+email,
-          async: false,
-          type: "GET",
-          headers: {
-            authorization: token
-          },
-          success: function(data) {
-            console.log("DATA FROM GET");
-            var number = data.data;
-            console.log( number);
-           
-             localStorage.setItem("points",number);
-              $("#points").append(number);
-            
-          },
-          error: function(data) {
-            console.log(data);
-          }
-        });
-      } 
+    var username = localStorage.getItem("username");
+    var email = localStorage.getItem("email");
+    var points = localStorage.getItem("points");
+
+    var token = localStorage.getItem("authorization");
+    if (token) {
+      $.ajax({
+        url: "/user/" + email,
+        async: false,
+        type: "GET",
+        headers: {
+          authorization: token
+        },
+        success: function(data) {
+          console.log("DATA FROM GET");
+          var number = data.data;
+          console.log(number);
+
+          localStorage.setItem("points", number);
+          $("#points").append(number);
+        },
+        error: function(data) {
+          console.log(data);
+        }
+      });
+    }
 
     $("#umvsum").click(Play1vs1);
     $("#tourn").click(PlayTournament);
     $("#logout").click(Logout);
-    $("#leaderboard").click(LeaderBoard);
-    $("#chooseShips").click(ChooseShips);
+    $("#leaderboard").click(function() {
+      changePageTo("leaderboard");
+    });
+    $("#chooseShips").click(function() {
+      changePageTo("placeships");
+    });
 
     var socket;
 
@@ -81,8 +82,8 @@
     //Play 1 contra 1
     function Play1vs1() {
       socket = io.connect();
-      
-      socket.emit("join", username,email,points);
+
+      socket.emit("join", username, email, points);
 
       var id = this.id;
       var modal = document.getElementById("myModal");
@@ -99,9 +100,9 @@
 
       socket.on("changePage", function(data) {
         if (data.success == true) {
-          $("#hide").css("display","none");
-          $("#show").css("display","block");
-          
+          $("#hide").css("display", "none");
+          $("#show").css("display", "block");
+
           console.log("Starting game");
           $("#game-number").html(data.gameID);
           //Game.initGame();
@@ -111,60 +112,53 @@
     }
     //Botao jogar torneio
     function PlayTournament() {
-    alert("Bora jogar Tournament!!");
+      alert("Bora jogar Tournament!!");
     }
-     //logout
+    //logout
     function Logout() {
-    var token = localStorage.getItem("authorization");
-    var email = localStorage.getItem("email");
-    if (token) {
-      $.ajax({
-        url: "/user/logged",
-        async: true,
-        type: "POST",
-        data: { email: email },
-        headers: {
-          authorization: token
-        },
-        success: function(data) {
-          console.log(data);
-          if (data.success == true) {
-            window.location = "/";
-            localStorage.clear();
+      var token = localStorage.getItem("authorization");
+      var email = localStorage.getItem("email");
+      if (token) {
+        $.ajax({
+          url: "/user/logged",
+          async: true,
+          type: "POST",
+          data: { email: email },
+          headers: {
+            authorization: token
+          },
+          success: function(data) {
+            console.log(data);
+            if (data.success == true) {
+              window.location = "/";
+              localStorage.clear();
+            }
+          },
+          error: function(data) {
+            console.log(data);
           }
-        },
-        error: function(data) {
-          console.log(data);
-        }
-      });
-    } else {
-      window.location = "/";
-      localStorage.clear();
+        });
+      } else {
+        window.location = "/";
+        localStorage.clear();
+      }
     }
-  }
     //Mostra a Leaderboard
-    function LeaderBoard() {
-    alert("Bora LeaderBoard!!");
-    }
-    //Escolhe a estrategia(posição) dos barcos
-    function ChooseShips() {
-    alert("Bora ChooseShips!!");
-    }
-   //Trata de tudo depois de conectar a socket
-    function afterConnect(){
 
+    //Escolhe a estrategia(posição) dos barcos
+
+    //Trata de tudo depois de conectar a socket
+    function afterConnect() {
       socket.on("disconnect", function() {
-        console.log("Disconnected from server.");    
+        console.log("Disconnected from server.");
         $("#game").hide();
       });
- 
-       
+
       socket.on("update", function(gameState) {
         Game.setTurn(gameState.turn);
         Game.updateGrid(gameState.gridIndex, gameState.grid);
       });
 
-      
       socket.on("chat", function(msg) {
         $("#messages").append(
           "<li><strong>" + msg.name + ":</strong> " + msg.message + "</li>"
@@ -172,24 +166,22 @@
         $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
       });
 
-      
       socket.on("notification", function(msg) {
         $("#messages").append("<li>" + msg.message + "</li>");
         $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
       });
 
-      socket.on("opponentleft",function(msg){
+      socket.on("opponentleft", function(msg) {
         $("#messages").append("<li>" + msg.message + "</li>");
         $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
-        socket.emit("opponentleft",{id: socket.id});
-        
+        socket.emit("opponentleft", { id: socket.id });
       });
 
       socket.on("gameover", function(isWinner) {
         Game.setGameOver(isWinner);
       });
-      
-     socket.on("leave", function() {
+
+      socket.on("leave", function() {
         $("#game").hide();
       });
 
@@ -199,10 +191,37 @@
         return false;
       });
 
-    var GameStatus = {
-      inProgress: 1,
-      gameOver: 2
-    };
-  }
+      var GameStatus = {
+        inProgress: 1,
+        gameOver: 2
+      };
+    }
+
+    function changePageTo(goTo) {
+      var token = localStorage.getItem("authorization");
+      if (token) {
+        $.ajax({
+          url: "/verify",
+          async: true,
+          type: "GET",
+          headers: {
+            authorization: token
+          },
+          success: function(data) {
+            console.log("DATA FROM VERIFY");
+            console.log(data.success);
+
+            if (data.success) {
+              if (data.success == true) {
+                window.location = "/" + goTo + "/" + token.substring(0, 5);
+              }
+            }
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      }
+    }
   </script>
 </html>

@@ -83,13 +83,19 @@ function updatePoints(userEmail, dataToUpdate, callback) {
 function findPoints(userEmail, callback) {
   user.findPointsModel(userEmail, callback);
 }
+
+function orderPoints(callback) {
+  user.getAllPoints(callback);
+}
+
 module.exports = {
   getAllUsers,
   loginAuth,
   registerAuth,
   verifyLogged,
   updatePoints,
-  findPoints
+  findPoints,
+  orderPoints
 };
 
 //FUNÇÂO PARA AJUDAR NO REGISTO

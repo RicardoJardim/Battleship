@@ -15,12 +15,12 @@
     />
 
     <title>Battleship</title>
-    <script type="text/javascript"> 
-      window.history.forward(); 
-      function noBack() { 
-          window.history.forward(); 
-      } 
-  </script>
+    <script type="text/javascript">
+      window.history.forward();
+      function noBack() {
+        window.history.forward();
+      }
+    </script>
   </head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 
@@ -50,7 +50,6 @@
       margin-right: auto;
       display: flex;
       width: 80%;
-     
     }
   </style>
 
@@ -71,9 +70,6 @@
     </div>
   </body>
   <script>
-
-
- 
     var x = document.getElementById("myAudio");
     console.log(x);
     $("#user_btn").click(sendLogin);
@@ -226,7 +222,7 @@
           success: function(data) {
             console.log(data);
             if (data.success == true) {
-              window.location = "/chose/" + token;
+              window.location = "/chose/" + token.substring(0, 5);
             }
           },
           error: function(data) {
