@@ -25,6 +25,7 @@
     "ejs": "^3.0.1",
     "embed-js": "^5.0.4",
     "express": "^4.17.1",
+    "html-entities": "^1.2.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.4.1",

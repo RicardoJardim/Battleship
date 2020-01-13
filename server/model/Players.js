@@ -1,6 +1,19 @@
-const { Ship, GameSetting } = require("./ShipsAndMore.js");
+const { GameSetting } = require("./ShipsAndMore.js");
 
-//Classe Player
+class Ship {
+  constructor(size) {
+    this.x = 0;
+    this.y = 0;
+    this.size = size;
+    this.hits = 0;
+    this.horizontal = false;
+  }
+
+  Morreu() {
+    return this.hits >= this.size;
+  }
+}
+
 class Player {
   //ID -> SOCKET.ID
   constructor(id) {
@@ -14,12 +27,6 @@ class Player {
     for (i = 0; i < GameSetting.gridRows * GameSetting.gridCols; i++) {
       this.shots[i] = 0;
       this.shipGrid[i] = -1;
-    }
-
-    //RANDOM DAS POSIÇÕES, CASO FALHE REALIZA MAIS UMA VEZ
-    if (!this.createRandomShips()) {
-      this.ships = [];
-      this.createShips();
     }
   }
   //TIRO NO ADVERSÁRIO
@@ -53,10 +60,11 @@ class Player {
     var shipIndex,
       i,
       gridIndex,
-      ship,
       x = [1, 3, 5, 8, 8],
       y = [1, 2, 5, 2, 8],
       horizontal = [false, true, false, false, true];
+
+    var ship;
 
     for (shipIndex = 0; shipIndex < GameSetting.ships.length; shipIndex++) {
       ship = new Ship(GameSetting.ships[shipIndex]);
@@ -74,41 +82,7 @@ class Player {
       this.ships.push(ship);
     }
   }
-  //VERIFICA BARCOS A VOLTA
-  checkShipAdjacent() {
-    var i,
-      j,
-      x1 = ship.x - 1,
-      y1 = ship.y - 1,
-      x2 = ship.horizontal ? ship.x + ship.size : ship.x + 1,
-      y2 = ship.horizontal ? ship.y + 1 : ship.y + ship.size;
 
-    for (i = x1; i <= x2; i++) {
-      if (i < 0 || i > GameSetting.gridCols - 1) continue;
-      for (j = y1; j <= y2; j++) {
-        if (j < 0 || j > GameSetting.gridRows - 1) continue;
-        if (this.shipGrid[j * GameSetting.gridCols + i] >= 0) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-  //VERIFICA SE O BARCO ESTÁ EM CIMA DO OUTRO
-  checkShipOverlap(ship) {
-    var i,
-      gridIndex = ship.y * GameSetting.gridCols + ship.x;
-
-    for (i = 0; i < ship.size; i++) {
-      if (this.shipGrid[gridIndex] >= 0) {
-        return true;
-      }
-      gridIndex += ship.horizontal ? 1 : GameSetting.gridCols;
-    }
-
-    return false;
-  }
   //BARCOS QUE FALTAM MORRER
   getShipsLeft() {
     var i,
@@ -127,52 +101,12 @@ class Player {
     var shipIndex;
 
     for (shipIndex = 0; shipIndex < GameSetting.ships.length; shipIndex++) {
-      ship = new Ship(GameSetting.ships[shipIndex]);
-
-      if (!this.placeShipRandom(ship, shipIndex)) {
-        return false;
-      }
+      var ship = new Ship(GameSetting.ships[shipIndex]);
 
       this.ships.push(ship);
     }
 
     return true;
-  }
-  //METE OS BARCO RANDOM
-  placeShipRandom(ship, shipIndex) {
-    var i,
-      j,
-      gridIndex,
-      xMax,
-      yMax,
-      tryMax = 25;
-
-    for (i = 0; i < tryMax; i++) {
-      ship.horizontal = Math.random() < 0.5;
-
-      xMax = ship.horizontal
-        ? GameSetting.gridCols - ship.size + 1
-        : GameSetting.gridCols;
-      yMax = ship.horizontal
-        ? GameSetting.gridRows
-        : GameSetting.gridRows - ship.size + 1;
-
-      ship.x = Math.floor(Math.random() * xMax);
-      ship.y = Math.floor(Math.random() * yMax);
-
-      if (!this.checkShipOverlap(ship) && !this.checkShipAdjacent(ship)) {
-        // success - ship does not overlap or is adjacent to other ships
-        // place ship array-index in shipGrid
-        gridIndex = ship.y * GameSetting.gridCols + ship.x;
-        for (j = 0; j < ship.size; j++) {
-          this.shipGrid[gridIndex] = shipIndex;
-          gridIndex += ship.horizontal ? 1 : GameSetting.gridCols;
-        }
-        return true;
-      }
-    }
-
-    return false;
   }
 }
 

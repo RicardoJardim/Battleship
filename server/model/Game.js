@@ -1,4 +1,4 @@
-var Player = require("./Player.js");
+var Player = require("./Players.js");
 const { GameStatus, GameSetting } = require("./ShipsAndMore.js");
 
 //CLASS GAME
@@ -62,8 +62,14 @@ class Game {
 
   //DISPARA PARA A POSIÇÃO QUE QUER
   shoot(position) {
-    var opponent = this.currentPlayer === 0 ? 1 : 0,
-      gridIndex = position.y * GameSetting.gridCols + position.x;
+    var opponent;
+    if (this.currentPlayer == 0) {
+      opponent = 1;
+    } else {
+      opponent = 0;
+    }
+
+    var gridIndex = position.y * GameSetting.gridCols + position.x;
 
     if (
       this.players[opponent].shots[gridIndex] === 0 &&
@@ -90,7 +96,7 @@ class Game {
 
     return false;
   }
-  //eSTADO DO JOGO
+  //ESTADO DO JOGO
   getGameState(player, gridOwner) {
     var gridAux;
     if (gridOwner == player) {
@@ -104,11 +110,15 @@ class Game {
   }
   //GRID
   getGrid(player, hideShips) {
+    var shipsAux;
+    if (hideShips) {
+      shipsAux = this.players[player].getSunkShips();
+    } else {
+      shipsAux = this.players[player].ships;
+    }
     return {
       shots: this.players[player].shots,
-      ships: hideShips
-        ? this.players[player].getSunkShips()
-        : this.players[player].ships
+      ships: shipsAux
     };
   }
 }

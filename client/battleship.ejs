@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NodeBattleship</title>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row vertical-center-row">
+        <div class="col-md-12">
+          <!-- Game -->
+          <div id="game">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    Battleship Game #<span id="game-number"></span>
+                  </div>
+                  <div class="panel-body">
+                    <!-- Player grids -->
+                    <div class="row">
+                      <div class="col-md-6 player-grid text-center">
+                        <h3>You</h3>
+                        <canvas id="canvas-grid1" width="361" height="361"
+                          >Browser does not support canvas.</canvas
+                        >
+                      </div>
+                      <div class="col-md-6 player-grid text-center">
+                        <h3>Opponent</h3>
+                        <canvas id="canvas-grid2" width="361" height="361"
+                          >Browser does not support canvas.</canvas
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <ul class="list-group">
+                    <!-- Status -->
+                    <li
+                      class="list-group-item text-center"
+                      id="turn-status"
+                    ></li>
+
+                    <!-- Chat messages -->
+                    <li class="list-group-item" id="messages-list">
+                      <ul id="messages"></ul>
+                    </li>
+
+                    <!-- Send chat message form -->
+                    <li class="list-group-item">
+                      <form id="message-form" action="">
+                        <div class="input-group">
+                          <input
+                            id="message"
+                            class="form-control"
+                            autocomplete="off"
+                          />
+                          <div class="input-group-btn">
+                            <button class="btn btn-primary">
+                              Send Message
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+  </body>
+  <script>
+    jQuery(document).ready(function() {
+      var socket = io.connect();
+
+      socket.on("connect", function() {
+        console.log("Connected to server.");
+        $("#disconnected").hide();
+        $("#waiting-room").show();
+      });
+
+      /**
+       * Disconnected from server event
+       */
+      socket.on("disconnect", function() {
+        console.log("Disconnected from server.");
+        $("#waiting-room").hide();
+        $("#game").hide();
+        $("#disconnected").show();
+      });
+
+      /**
+       * User has joined a game
+       */
+      socket.on("join", function(gameId) {
+        Game.initGame();
+        $("#messages").empty();
+        $("#disconnected").hide();
+        $("#waiting-room").hide();
+        $("#game").show();
+        $("#game-number").html(gameId);
+      });
+
+      /**
+       * Update player's game state
+       */
+      socket.on("update", function(gameState) {
+        Game.setTurn(gameState.turn);
+        Game.updateGrid(gameState.gridIndex, gameState.grid);
+      });
+
+      /**
+       * Game chat message
+       */
+      socket.on("chat", function(msg) {
+        $("#messages").append(
+          "<li><strong>" + msg.name + ":</strong> " + msg.message + "</li>"
+        );
+        $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
+      });
+
+      /**
+       * Game notification
+       */
+      socket.on("notification", function(msg) {
+        $("#messages").append("<li>" + msg.message + "</li>");
+        $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
+      });
+
+      /**
+       * Change game status to game over
+       */
+      socket.on("gameover", function(isWinner) {
+        Game.setGameOver(isWinner);
+      });
+
+      /**
+       * Leave game and join waiting room
+       */
+      socket.on("leave", function() {
+        $("#game").hide();
+        $("#waiting-room").show();
+      });
+
+      /**
+       * Send chat message to server
+       */
+      $("#message-form").submit(function() {
+        socket.emit("chat", $("#message").val());
+        $("#message").val("");
+        return false;
+      });
+    });
+
+    function sendLeaveRequest(e) {
+      e.preventDefault();
+      socket.emit("leave");
+    }
+
+    function sendShot(square) {
+      socket.emit("shot", square);
+    }
+
+    var GameStatus = {
+      inProgress: 1,
+      gameOver: 2
+    };
+  </script>
+</html>

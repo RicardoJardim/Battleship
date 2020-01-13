@@ -7,9 +7,20 @@ var ejs = require("ejs");
 var socketio = require("socket.io");
 var urlParser = bodyParser.urlencoded({ extended: false });
 
-const userController = require("./controller/UserController");
+//Encryptação de mensagens
+var Entities = require("html-entities").AllHtmlEntities;
+var entities = new Entities();
 
+//Middleware
 const auth = require("./middleware/auth");
+
+//Game
+
+const { GameStatus } = require("./model/ShipsAndMore.js");
+const { Game } = require("./model/Game");
+
+//Controllers
+const userController = require("./controller/UserController");
 
 //Utils
 var mongoUtil = require("./utils/mongoConnection");
@@ -21,6 +32,7 @@ app.use(express.json());
 var server = http.Server(app);
 
 var io = socketio(server);
+
 app.use(urlParser);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../client"));
@@ -29,9 +41,10 @@ console.log("Server is running");
 
 //Variáveis
 
-const users = [];
+var users = {};
+var gameIdCounter = 1;
 const connections = [];
-
+/*
 io.sockets.on("connection", socket => {
   console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
 
@@ -48,29 +61,157 @@ io.sockets.on("connection", socket => {
     io.sockets.emit("new message", { message: message });
   });
 });
+*/
+io.sockets.on("connection", socket => {
+  console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
+
+  socket.on("join", function(nome) {
+    users[socket.id] = {
+      username: nome,
+      inGame: null,
+      player: null
+    };
+    var gameRoom = "game" + gameIdCounter;
+    socket.join(gameRoom);
+    //seeClients(gameRoom);
+    var x = getClientsInRoom(gameRoom);
+    console.log(x.length);
+    console.log(users);
+    if (x.length >= 2) {
+      console.log(users[x[0]].username + " " + users[x[1]].username);
+      var game = new Game(gameIdCounter, x[0], x[1]);
+      console.log(game);
+
+      users[x[0]].player = 0;
+      users[x[1]].player = 1;
+      users[x[0]].inGame = game;
+      users[x[1]].inGame = game;
+
+      //io.to("game" + game.id).emit("join", game.id);
+
+      // send initial ship placements
+      io.to(x[0]).emit("update", game.getGameState(0, 0));
+      io.to(x[1]).emit("update", game.getGameState(1, 1));
+
+      console.log(
+        new Date().toISOString() +
+          " " +
+          x[0] +
+          " and " +
+          x[1] +
+          " have joined game ID " +
+          game.id
+      );
+      seeClients("game" + game.id);
+
+      io.to("game" + game.id).emit("changePage", { success: true });
+      gameIdCounter++;
+    }
+  });
+
+  //SAIR DA ESPERA
+  socket.on("leaveWaiting", function() {
+    console.log(socket.id);
+    delete users[socket.id];
+  });
+
+  socket.on("leave", function() {
+    if (users[socket.id].inGame !== null) {
+      leaveGame(socket);
+    }
+    delete users[socket.id];
+  });
+
+  //QUANDO DISCONECTA VERIFICA SE TA EM JOGO
+  socket.on("disconnect", function() {
+    console.log(
+      new Date().toISOString() + " ID " + socket.id + " disconnected."
+    );
+
+    if (users[socket.id]) {
+      leaveGame(socket);
+    }
+
+    delete users[socket.id];
+  });
+  //CHAT
+  socket.on("chat", function(msg) {
+    if (users[socket.id].inGame !== null && msg) {
+      console.log(
+        new Date().toISOString() +
+          " Chat message from " +
+          socket.id +
+          ": " +
+          msg
+      );
+
+      // Send message to opponent
+      socket.broadcast.to("game" + users[socket.id].inGame.id).emit("chat", {
+        name: "Opponent",
+        message: entities.encode(msg)
+      });
+
+      // Send message to self
+      io.to(socket.id).emit("chat", {
+        name: "Me",
+        message: entities.encode(msg)
+      });
+    }
+  });
+
+  //SHOT
+  socket.on("shot", function(position) {
+    var game = users[socket.id].inGame;
+    var opponent;
+
+    if (game !== null) {
+      // Is it this users turn?
+      if (game.currentPlayer === users[socket.id].player) {
+        opponent = game.currentPlayer === 0 ? 1 : 0;
+
+        if (game.shoot(position)) {
+          // Valid shot
+          checkGameOver(game);
+
+          // Update game state on both clients.
+          io.to(socket.id).emit(
+            "update",
+            game.getGameState(users[socket.id].player, opponent)
+          );
+          io.to(game.getPlayerId(opponent)).emit(
+            "update",
+            game.getGameState(opponent, opponent)
+          );
+        }
+      }
+    }
+  });
+});
 
 //Routes
-app.get("/socket", (req, res) => {
+/* app.get("/socket", (req, res) => {
   var sendToServe = path.join(__dirname, "../client/index.html");
   res.sendFile(sendToServe);
-});
+}); */
+
+/* app.get("/battleshipgame", (req, res) => {
+  res.render("battleship");
+}); */
 
 app.get("/", (req, res) => {
   res.render("home");
 });
 
-
-
 app.get("/chose/:token", (req, res) => {
   if (req.params.token) {
-    res.render("choseGame");
+    res.render("Bewteen");
   }
 });
 
-app.get("/game", (req, res) => {
+/* app.get("/game", (req, res) => {
   res.render("game");
 });
-
+ */
 //Retorna todos os utilizadores
 app.get("/users", auth, (req, res) => {
   userController.getAllUsers(function(result) {
@@ -129,3 +270,61 @@ mongoUtil.connectToServer(function(err) {
     console.log("Chatroom listening on port 8080");
   });
 });
+
+function leaveGame(socket) {
+  console.log(socket.id);
+  console.log(users[socket.id]);
+  if (users[socket.id].inGame !== null) {
+    console.log(
+      new Date().toISOString() +
+        " ID " +
+        socket.id +
+        " left game ID " +
+        users[socket.id].inGame.id
+    );
+
+    // Notifty opponent
+    socket.broadcast
+      .to("game" + users[socket.id].inGame.id)
+      .emit("notification", {
+        message: "Opponent has left the game"
+      });
+
+    if (users[socket.id].inGame.gameStatus !== GameStatus.gameOver) {
+      users[socket.id].inGame.abortGame(users[socket.id].player);
+      checkGameOver(users[socket.id].inGame);
+    }
+
+    socket.leave("game" + users[socket.id].inGame.id);
+
+    users[socket.id].inGame = null;
+    users[socket.id].player = null;
+
+    io.to(socket.id).emit("leave");
+  }
+}
+
+function checkGameOver(game) {
+  if (game.gameStatus === GameStatus.gameOver) {
+    console.log(new Date().toISOString() + " Game ID " + game.id + " ended.");
+    io.to(game.getWinnerId()).emit("gameover", true);
+    io.to(game.getLoserId()).emit("gameover", false);
+  }
+}
+
+function seeClients(strings) {
+  io.of("/").adapter.clients([strings], (err, clients) => {
+    console.log(clients);
+  });
+}
+
+function getClientsInRoom(string) {
+  var clientsArray = [];
+  for (var id in io.sockets.adapter.rooms[string]) {
+    clientsArray.push(io.sockets.adapter.rooms[string][id]);
+  }
+  var keys = Object.keys(clientsArray[0]);
+  console.log(keys);
+
+  return keys;
+}
