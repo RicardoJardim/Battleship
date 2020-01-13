@@ -65,9 +65,11 @@ io.sockets.on("connection", socket => {
 io.sockets.on("connection", socket => {
   console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
 
-  socket.on("join", function(nome) {
+  socket.on("join", function(nome, email, points) {
     users[socket.id] = {
+      points: points,
       username: nome,
+      email: email,
       inGame: null,
       player: null
     };
@@ -77,17 +79,22 @@ io.sockets.on("connection", socket => {
     var x = getClientsInRoom(gameRoom);
     console.log(x.length);
     console.log(users);
+
     if (x.length >= 2) {
-      console.log(users[x[0]].username + " " + users[x[1]].username);
-      var game = new Game(gameIdCounter, x[0], x[1]);
+      console.log(users[x[0]].email + " " + users[x[1]].email);
+      var game = new Game(
+        gameIdCounter,
+        x[0],
+        users[x[0]].email,
+        x[1],
+        users[x[1]].email
+      );
       console.log(game);
 
       users[x[0]].player = 0;
       users[x[1]].player = 1;
       users[x[0]].inGame = game;
       users[x[1]].inGame = game;
-
-      //io.to("game" + game.id).emit("join", game.id);
 
       // send initial ship placements
       io.to(x[0]).emit("update", game.getGameState(0, 0));
@@ -104,7 +111,10 @@ io.sockets.on("connection", socket => {
       );
       seeClients("game" + game.id);
 
-      io.to("game" + game.id).emit("changePage", { success: true });
+      io.to("game" + game.id).emit("changePage", {
+        success: true,
+        gameID: game.id
+      });
       gameIdCounter++;
     }
   });
@@ -115,6 +125,21 @@ io.sockets.on("connection", socket => {
     delete users[socket.id];
   });
 
+  socket.on("opponentleft", function(data) {
+    console.log("FAZER UPDATE NOS PONTOS");
+    console.log(data.id);
+    console.log(users[data.id]);
+
+    userController.updatePoints(
+      { email: users[data.id].email },
+      { points: parseInt(users[data.id].points) + 100 },
+      function(result) {
+        console.log(result);
+      }
+    );
+  });
+
+  //SAIR DO JOGO
   socket.on("leave", function() {
     if (users[socket.id].inGame !== null) {
       leaveGame(socket);
@@ -129,6 +154,7 @@ io.sockets.on("connection", socket => {
     );
 
     if (users[socket.id]) {
+      console.log("Ta em jogo");
       leaveGame(socket);
     }
 
@@ -189,14 +215,6 @@ io.sockets.on("connection", socket => {
 });
 
 //Routes
-/* app.get("/socket", (req, res) => {
-  var sendToServe = path.join(__dirname, "../client/index.html");
-  res.sendFile(sendToServe);
-}); */
-
-/* app.get("/battleshipgame", (req, res) => {
-  res.render("battleship");
-}); */
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -208,10 +226,6 @@ app.get("/chose/:token", (req, res) => {
   }
 });
 
-/* app.get("/game", (req, res) => {
-  res.render("game");
-});
- */
 //Retorna todos os utilizadores
 app.get("/users", auth, (req, res) => {
   userController.getAllUsers(function(result) {
@@ -263,6 +277,13 @@ app.get("/verify", auth, (req, res) => {
   res.json({ success: true });
 });
 
+app.get("/user/:email", auth, (req, res) => {
+  userController.findPoints(req.params.email, function(data) {
+    console.log(data);
+    res.json({ data: data.data.points });
+  });
+});
+
 //Conexão a base de dados
 //Instancia o servidor
 mongoUtil.connectToServer(function(err) {
@@ -272,7 +293,6 @@ mongoUtil.connectToServer(function(err) {
 });
 
 function leaveGame(socket) {
-  console.log(socket.id);
   console.log(users[socket.id]);
   if (users[socket.id].inGame !== null) {
     console.log(
@@ -283,18 +303,25 @@ function leaveGame(socket) {
         users[socket.id].inGame.id
     );
 
-    // Notifty opponent
+    // NOTIFICA QUE SAIU DO JOGO
     socket.broadcast
       .to("game" + users[socket.id].inGame.id)
       .emit("notification", {
         message: "Opponent has left the game"
       });
 
-    if (users[socket.id].inGame.gameStatus !== GameStatus.gameOver) {
+    socket.broadcast
+      .to("game" + users[socket.id].inGame.id)
+      .emit("opponentleft", {
+        message: "You Won the game and 100 points"
+      });
+
+    if (users[socket.id].inGame.gameStatus != GameStatus.gameOver) {
       users[socket.id].inGame.abortGame(users[socket.id].player);
       checkGameOver(users[socket.id].inGame);
     }
 
+    //SAI DO ROOM
     socket.leave("game" + users[socket.id].inGame.id);
 
     users[socket.id].inGame = null;

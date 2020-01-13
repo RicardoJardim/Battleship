@@ -115,11 +115,36 @@ function loginUser(data, callback) {
     });
 }
 
+function updatePointsModel(user, data, callback) {
+  var db = mongodb.getDB();
+  var newvalues = { $set: { points: data.points } };
+  db.collection("users").updateOne(user, newvalues, function(err, res) {
+    if (!err) callback(res);
+  });
+}
+function findPointsModel(email, callback) {
+  var db = mongodb.getDB();
+  var cursor = db
+    .collection("users")
+    .findOne({ email: email }, { projection: { password: 0 } }, function(
+      err,
+      result
+    ) {
+      if (result) {
+        callback({ success: true, data: result });
+      } else {
+        callback({ success: false, data: "Utilizador não encontrado" });
+      }
+    });
+}
+
 module.exports = {
   insertUser,
   loginUser,
   getAllUsers,
   findUser,
   validateUser,
+  updatePointsModel,
+  findPointsModel,
   User
 };

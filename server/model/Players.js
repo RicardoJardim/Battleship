@@ -16,9 +16,10 @@ class Ship {
 
 class Player {
   //ID -> SOCKET.ID
-  constructor(id) {
+  constructor(id, email) {
     var i;
     this.id = id;
+    this.email = email;
     this.shots = Array(GameSetting.gridRows * GameSetting.gridCols);
     this.shipGrid = Array(GameSetting.gridRows * GameSetting.gridCols);
     this.ships = [];

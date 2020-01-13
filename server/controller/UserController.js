@@ -76,11 +76,20 @@ function getAllUsers(callback) {
   user.getAllUsers(callback);
 }
 
+function updatePoints(userEmail, dataToUpdate, callback) {
+  user.updatePointsModel(userEmail, dataToUpdate, callback);
+}
+
+function findPoints(userEmail, callback) {
+  user.findPointsModel(userEmail, callback);
+}
 module.exports = {
   getAllUsers,
   loginAuth,
   registerAuth,
-  verifyLogged
+  verifyLogged,
+  updatePoints,
+  findPoints
 };
 
 //FUNÇÂO PARA AJUDAR NO REGISTO

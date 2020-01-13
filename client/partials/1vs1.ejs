@@ -1,137 +1,210 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <style>
+  @import url(https://fonts.googleapis.com/css?family=Lato:400, 300, 700);
+  @import url(https://fonts.googleapis.com/css?family=Rubik:400, 900);
 
-    @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
-    @import url(https://fonts.googleapis.com/css?family=Rubik:400,900);
+  * {
+    box-sizing: border-box;
+  }
+  body,
+  html {
+    height: 100%;
+    min-height: 100%;
+  }
 
-*{box-sizing: border-box;}
-body, html { height: 100%; min-height: 100%; }
+  #card-container {
+    width: 1000px;
+    height: 600px;
+    position: absolute;
+    top: 42%;
+    left: 48%;
+    margin: -250px 0 0 -460px;
+  }
+  #card {
+    animation: backAn 60s infinite;
+    color: #fff;
+    padding: 30px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    background: url(https://i.imgur.com/erWVdUt.jpg) 100% bottom;
+    box-shadow: 0px 45px 100px rgba(0, 0, 0, 0.4),
+      inset 0 0 0 1000px rgba(27, 36, 156, 0.6);
+  }
 
-#card-container{
-   width: 1000px;
-   height: 600px;
-   position:absolute;
-   top: 42%; left: 48%;
-   margin: -250px 0 0 -460px;
-}
-#card{
-   animation: backAn 60s infinite;
-   color:#fff;
-   padding:30px;
-   width:100%;
-   height:100%;
-   position:absolute;
-   z-index:1;
- background:url(https://i.imgur.com/erWVdUt.jpg) 100% bottom;
-   box-shadow: 
-     0px 45px 100px rgba(0, 0, 0, .4),
-     inset 0 0 0 1000px rgba(27, 36, 156, 0.6);
-}
+  #card .text-block {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.7);
+  }
+  #card .text-block h1 {
+    font-family: "Rubik", sans-serif;
+    font-size: 3em;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  #card .text-block h1 small {
+    font-size: 0.2em;
+    color: #ccc;
+    position: relative;
+    bottom: 10px;
+  }
+  #card .text-block h3 {
+    margin: 0;
+    font-weight: 700;
+  }
+  #card .text-block p {
+    font-weight: 300;
+    width: 60%;
+  }
+  #card .text-block button {
+    transition: all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
+    border: 4px solid #fff;
+    padding: 10px;
+    background: transparent;
+    font-family: "Rubik", sans-serif;
+    text-transform: uppercase;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  #card .text-block button:hover {
+    background: #b51d2a;
+  }
 
-#card .text-block{position:relative;z-index:2;text-shadow: 0px 3px 10px rgba(0, 0, 0, .7)}
-#card .text-block h1{font-family: 'Rubik', sans-serif; font-size:3em; margin:0; text-transform:uppercase; font-weight:700;}
-#card .text-block h1 small{font-size:.2em;color:#ccc;position:relative;bottom:10px}
-#card .text-block h3{margin:0;font-weight:700;}
-#card .text-block p{font-weight:300; width:60%}
-#card .text-block button{transition: all .35s cubic-bezier(.37,.26,.35,1);border:4px solid #fff; padding:10px; background:transparent;font-family: 'Rubik', sans-serif;text-transform:uppercase; font-weight:800; cursor:pointer;}
-#card .text-block button:hover{background:#B51D2A}
+  #card-container .pg {
+    position: absolute;
+    height: 450px;
+    width: 40%;
+    top: -220px;
+    right: 200px;
+    bottom: 0px;
+    z-index: 2;
+  }
+  #card-container .pg > img {
+    height: 900px;
+  }
 
-#card-container .pg{position:absolute;height:450px; width:40%;top: -220px; right:200px;bottom:0px;z-index:2}
-#card-container .pg > img{height:900px;}
+  .shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 60%
+    );
+    z-index: 1;
+  }
+  button {
+    color: #fff;
+    height: 5em;
+  }
 
-.shine {
-position: absolute;
-top: 0; left: 0; right: 0; bottom: 0;
-background: linear-gradient(90deg, rgba(0,0,0,.4) 0%,rgba(0,0,0,.2) 60%);
-z-index: 1;
-}
-button{color:#fff;height: 5em;}
+  @keyframes backAn {
+    0% {
+      background-size: 100%;
+    }
+    50% {
+      background-size: 250%;
+    }
+    100% {
+      background-size: 100%;
+    }
+  }
 
-@keyframes backAn {
-  0%   { background-size:100% }
-  50%   { background-size:250% }
-  100%   { background-size:100% }
-}
-
-.test23{
-    display:flex;
+  .test23 {
+    display: flex;
     flex-flow: column;
     margin-top: 3%;
     margin-left: 3%;
     width: 40%;
     flex: 1;
-}
+  }
 
-#tourn{
+  #tourn {
     margin-top: 10%;
-}
+  }
 
-#umvsum{
-  margin-bottom: 10%;
-}
-hr{
-  width: 98%;
-}
-
+  #umvsum {
+    margin-bottom: 10%;
+  }
+  hr {
+    width: 98%;
+  }
 </style>
 
-    <div id="card-container" data-offset="2">
-        <div class="pg">
-           <img src="https://i.imgur.com/dGKS4Af.png">
-        </div>
-        <div id="card">
-           <div class="shine"></div>
-           <div class="text-block">
-              <h1>Age of Battleships 2</h1>
-              <h2>Welcome to Age of Battleships 2</h2>
-              <h3 id="username"> Username : </h3>
-              <h3 id="points"> Points: </h3>
-              <br>
-              <div class="test23">
-                <button id="umvsum">Play</button>
-                <hr>
-                <button id="tourn">Play tournament</button>
-                <hr>
-              </div>
-              <br>
-              <button id="logout">
-                Logout
-            </button>
-           </div>
-        </div>
-     </div>
+<div id="card-container" data-offset="2">
+  <div class="pg">
+    <img src="https://i.imgur.com/dGKS4Af.png" />
+  </div>
+  <div id="card">
+    <div class="shine"></div>
+    <div class="text-block">
+      <h1>Age of Battleships 2</h1>
+      <h2>Welcome to Age of Battleships 2</h2>
+      <h3 id="username">Username :</h3>
+      <h3 id="points">Points:</h3>
+      <br />
+      <div class="test23">
+        <button id="umvsum">Play</button>
+        <hr />
+        <button id="tourn">Play tournament</button>
+        <hr />
+      </div>
+      <br />
+      <button id="logout">
+        Logout
+      </button>
+    </div>
+  </div>
+</div>
 
 <script>
+  var username = localStorage.getItem("username");
+  var email = localStorage.getItem("email");
+  // var points = localStorage.getItem("points");
 
-var username = localStorage.getItem("username");
-var points = localStorage.getItem("points");
-var email = localStorage.getItem("email");
+  $("#username").append(username);
+  //$("#points").append(points);
 
-$("#username").append(username);
-$("#points").append(points);
- 
+  var $poster = $("#card-container"),
+    $shine = $(".shine"),
+    w = $(window).width(),
+    h = $(window).height();
 
-var $poster = $('#card-container'),
-  $shine = $('.shine'),
-  w = $(window).width(),
-  h = $(window).height();
+  $(window).on("mousemove", function(e) {
+    var offsetX = 0.2 - e.pageX / w,
+      offsetY = 0.2 - e.pageY / h,
+      dy = e.pageY - h / 2,
+      dx = e.pageX - w / 2,
+      theta = Math.atan2(dy, dx),
+      angle = (theta * 180) / Math.PI - 90,
+      offsetPoster = $poster.data("offset"),
+      transformPoster =
+        "translateY(" +
+        -offsetX * offsetPoster +
+        "px) rotateX(" +
+        -offsetY * offsetPoster +
+        "deg) rotateY(" +
+        offsetX * (offsetPoster * 2) +
+        "deg)";
 
-$(window).on('mousemove', function(e) {
-  var offsetX = 0.20 - e.pageX / w,
-    offsetY = 0.20 - e.pageY / h,
-    dy = e.pageY - h / 2,
-    dx = e.pageX - w / 2,
-    theta = Math.atan2(dy, dx),
-    angle = theta * 180 / Math.PI - 90,
-    offsetPoster = $poster.data('offset'),
-    transformPoster = 'translateY(' + -offsetX * offsetPoster + 'px) rotateX(' + (-offsetY * offsetPoster) + 'deg) rotateY(' + (offsetX * (offsetPoster * 2)) + 'deg)';
+    if (angle < 0) {
+      angle = angle + 360;
+    }
+    $shine.css(
+      "background",
+      "linear-gradient(" +
+        angle +
+        "deg, rgba(0,0,0," +
+        e.pageY / h / 5 +
+        ") 0%,rgba(0,0,0,.25) 80%)"
+    );
 
-  if (angle < 0) {
-    angle = angle + 360;
-  }
-  $shine.css('background', 'linear-gradient(' + angle + 'deg, rgba(0,0,0,' + (e.pageY / h /5)  + ') 0%,rgba(0,0,0,.25) 80%)');
-
-  $poster.css('transform', transformPoster);
-});
-
+    $poster.css("transform", transformPoster);
+  });
 </script>

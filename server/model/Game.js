@@ -5,12 +5,15 @@ const { GameStatus, GameSetting } = require("./ShipsAndMore.js");
 class Game {
   //ID -> ID DO JOGO
   //IDPLAYER -> SOCKETID
-  constructor(id, idPlayer1, idPlayer2) {
+  constructor(id, idPlayer1, email1, idPlayer2, email2) {
     this.id = id;
     this.currentPlayer = Math.floor(Math.random() * 2);
     this.winningPlayer = null;
     this.gameStatus = GameStatus.inProgress;
-    this.players = [new Player(idPlayer1), new Player(idPlayer2)];
+    this.players = [
+      new Player(idPlayer1, email1),
+      new Player(idPlayer2, email2)
+    ];
   }
   //ID DO PLAYER
   getPlayerId(player) {

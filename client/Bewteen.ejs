@@ -41,15 +41,44 @@
     </div>
   </body>
   <script>
+      var username = localStorage.getItem("username");
+      var email = localStorage.getItem("email");
+      var points = localStorage.getItem("points");
+     
+      var token = localStorage.getItem("authorization");
+      if (token) {
+        $.ajax({
+          url: "/user/"+email,
+          async: false,
+          type: "GET",
+          headers: {
+            authorization: token
+          },
+          success: function(data) {
+            console.log("DATA FROM GET");
+            var number = data.data;
+            console.log( number);
+           
+             localStorage.setItem("points",number);
+              $("#points").append(number);
+            
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      } 
+
     $("#umvsum").click(Play1vs1);
     $("#tourn").click(PlayTournament);
     $("#logout").click(Logout);
+
     var socket;
     function Play1vs1() {
       // alert("Bora jogar!!");
       socket = io.connect();
-      var username = localStorage.getItem("username");
-      socket.emit("join", username);
+      
+      socket.emit("join", username,email,points);
 
       var id = this.id;
       var modal = document.getElementById("myModal");
@@ -70,11 +99,13 @@
           $("#show").css("display","block");
           
           console.log("Starting game");
-          onmeo();
+          $("#game-number").html(data.gameID);
+          //Game.initGame();
+          afterConnect();
         }
       });
     }
-function onmeo(){
+function afterConnect(){
 
        
       socket.on("disconnect", function() {
@@ -82,17 +113,7 @@ function onmeo(){
         $("#game").hide();
       });
  
-      
-     /* socket.on("join", function(gameId) {
-        Game.initGame();
-        $("#messages").empty();
-        $("#disconnected").hide();
-        $("#waiting-room").hide();
-        $("#game").show();
-        $("#game-number").html(gameId);
-      });*/
-
-      
+       
       socket.on("update", function(gameState) {
         Game.setTurn(gameState.turn);
         Game.updateGrid(gameState.gridIndex, gameState.grid);
@@ -112,6 +133,13 @@ function onmeo(){
         $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
       });
 
+      socket.on("opponentleft",function(msg){
+        $("#messages").append("<li>" + msg.message + "</li>");
+        $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
+        socket.emit("opponentleft",{id: socket.id});
+        
+      });
+
       
       socket.on("gameover", function(isWinner) {
         Game.setGameOver(isWinner);
@@ -119,7 +147,6 @@ function onmeo(){
       
      socket.on("leave", function() {
         $("#game").hide();
-        $("#waiting-room").show();
       });
 
       
