@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <head>
+
       <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -19,17 +19,144 @@
       <title>Battleship</title>
     <title>Document</title>
   </head>
-  <style></style>
+
+  <style>
+    #background_lead{
+      background-image: url(https://i.imgur.com/clq2gbn.jpg);
+      height: 100vh;
+      padding-top: 2%;
+      padding-left: 30%
+    }
+    @import 'https://fonts.googleapis.com/css?family=Ubuntu';
+* {
+  outline: none;
+  user-select: none;
+}
+
+.leaderboard {
+  background-color: #123;
+  color: #eee;
+  width: 600px;
+  border-radius: 5px;
+  top: 20%;
+  box-shadow: 2px 5px 15px rgba(17, 34, 51, 0.5);
+  text-align: left;
+}
+.leaderboard h2 {
+  padding: 15px 0;
+  margin: 0;
+  text-align: center;
+}
+.leaderboard p {
+  margin: 3px 10px;
+  text-align: right;
+  color: #567;
+}
+.leaderboard ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.leaderboard ol li {
+  counter-increment: leaderboard-num;
+  padding: 18px 50px;
+  position: relative;
+  transition-duration: 0.5s;
+}
+.leaderboard ol li::before {
+  content: counter(leaderboard-num);
+  display: block;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  color: #345;
+  text-align: center;
+  position: absolute;
+  left: 15px;
+}
+.leaderboard ol li:nth-of-type(1) {
+  background-color: #4d5e6f;
+}
+.leaderboard ol li:nth-of-type(2) {
+  background-color: #435465;
+}
+.leaderboard ol li:nth-of-type(3) {
+  background-color: #394a5b;
+}
+.leaderboard ol li:nth-of-type(4) {
+  background-color: #2f4051;
+}
+.leaderboard ol li:nth-of-type(5) {
+  background-color: #253647;
+}
+.leaderboard ol li:nth-of-type(6) {
+  background-color: #1b2c3d;
+}
+.leaderboard ol li:nth-of-type(7) {
+  background-color: #162431;
+}
+.leaderboard ol li:nth-of-type(8) {
+  background-color: #121e29;
+}
+.leaderboard ol li:nth-of-type(9) {
+  background-color: #0d151d;
+}
+.leaderboard ol li:nth-of-type(10) {
+  background-color: #070b0f;
+}
+.leaderboard ol li .percent {
+  position: absolute;
+  right: 15px;
+}
+.leaderboard ol li:hover {
+  transform: scale(1.3);
+}
+.leaderboard ol:hover li:not(:hover) {
+  opacity: 0.5;
+}
+
+#voltar{
+  margin-top: 1%;
+  margin-left: 21.5%;
+  transition: all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
+    border: 4px solid #fff;
+    padding: 10px;
+    background: #123;
+    font-family: "Rubik", sans-serif;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 800;
+    cursor: pointer;
+}
+#voltar :hover {
+  transform: scale(1.3);
+  }
+
+.name{
+  font-size: 1.1em;
+}
+
+  </style>
+  
   <body>
+    <div id="background_lead">
+        <div class="leaderboard">
+          <h2>Leaderboard</h2>
+          <ol>
+            <% var i = 0;  %>
+            <% data.forEach(function(item){ %>
+              <% if(i < 10){ %>
+                <li><span class="name"> <%= item.name %> <span class="percent"> <%= item.points %></span> </span> </li>
+                <%  }  i++;  %>            
+            <% }) %>
+          </ol>
+        </div>
       <button id="voltar">Go back</button>
-    <div>
-        <% data.forEach(function(item){ %>
-            <li><%= item.name %>   <%= item.points %></li>
-          <% }) %>
-
     </div>
-
+  
   </body>
+
   <script>
       var token = localStorage.getItem("authorization");
       console.log(token);

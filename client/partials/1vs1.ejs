@@ -7,6 +7,7 @@
   html {
     height: 100%;
     min-height: 100%;
+    overflow: hidden;
   }
 
   #card-container {
@@ -16,6 +17,7 @@
     top: 42%;
     left: 48%;
     margin: -250px 0 0 -460px;
+    
   }
   #card {
     animation: backAn 60s infinite;
@@ -75,7 +77,7 @@
     height: 450px;
     width: 40%;
     top: -220px;
-    right: 200px;
+    right: 180px;
     bottom: 0px;
     z-index: 2;
   }
@@ -142,12 +144,14 @@
 
   #chooseShips{
     margin-left: 3%;
+    position: relative;
+    z-index: 1;
   }
 </style>
 
 <div id="card-container" data-offset="2">
   <div class="pg">
-    <img src="https://i.imgur.com/dGKS4Af.png" />
+    <img  src="https://i.imgur.com/dGKS4Af.png" />
   </div>
   <div id="card">
     <div class="shine"></div>
