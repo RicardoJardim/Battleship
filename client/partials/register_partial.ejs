@@ -8,8 +8,6 @@
         margin-top: 2%;
     }
     
- 
-    
     .card-signin {
       border: 0;
       border-radius: 1rem;
@@ -25,8 +23,9 @@
     
     .card-signin .card-body1 {
       padding: 2rem;
-      background-color: white;
+      background-color: rgb(255, 255, 255,0.85);
       border-radius: 5%;
+      height: 350px;
     }
     
     .form-signin {
@@ -92,6 +91,7 @@
       color: transparent;
     }
     
+
     .form-label-group input:not(:placeholder-shown) {
       padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
       padding-bottom: calc(var(--input-padding-y) / 3);
@@ -104,6 +104,10 @@
       color: #777;
     }
     
+    .size-inputs{
+      height: 1em;
+    }
+    
     </style>
 
             <div class="container">
@@ -111,29 +115,22 @@
                 <div class="col-sm-9 col-md-7 col-lg-10 mx-auto">
                   <div class="card card-signin my-5">
                     <div class="card-body1">
-                      <h4 class="card-title text-center">Register:</h4>
+                      <h4 style="font-size: 2em;" class="card-title text-center">Register:</h4>
                       <form id="form_regist" method="" action="" class="form-signin">
                         <div class="form-label-group">
-                          <input type="text" id="inputUsername_register" name="Username" class="form-control" placeholder="Username" required autofocus>
+                          <input style="height:3em" type="text" id="inputUsername_register" name="Username" class="form-control" placeholder="Username" required autofocus>
                           <label for="inputUsername_register">Username</label>
                         </div>
-
                         <div class="form-label-group">
-                            <input type="email" id="inputEmail_register" name="email" class="form-control" placeholder="Email address" required autofocus>
+                            <input  style="height:3em" type="email" id="inputEmail_register" name="email" class="form-control" placeholder="Email address" required autofocus>
                             <label for="inputEmail_register">Email address</label>
                           </div>
-          
                         <div class="form-label-group">
-                          <input type="password" id="inputPassword_register" name="password" class="form-control" placeholder="Password" required>
+                          <input  style="height:3em"  type="password" id="inputPassword_register" name="password" class="form-control" placeholder="Password" required>
                           <label for="inputPassword_register">Password</label>
                         </div>
-          
-                    
-                      
                       </form>
-                      <button class="btn btn-lg btn-primary btn-block text-uppercase" id="register_btn" type="submit">Sign in</button>
-                      <hr class="my-4">
-                     
+                      <button  class="btn btn-lg btn-primary btn-block text-uppercase" id="register_btn" type="submit">Sign in</button>  
                     </div>
                   </div>
                 </div>

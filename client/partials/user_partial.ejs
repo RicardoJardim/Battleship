@@ -1,9 +1,8 @@
-<style scoped>
+<style >
 :root {
   --input-padding-x: 1.5rem;
   --input-padding-y: .75rem;
 }
-
 
 .row{
     margin-left: 9%;
@@ -28,8 +27,7 @@
   padding: 2rem;
   background-color: white;
   border-radius: 5%;
-  height: 304px;
-  
+  height: 350px;
 }
 
 .form-signin {
@@ -112,30 +110,26 @@
     padding-top: 0%;
 }
 
-</style>
 
+</style>
         <div class="container">
           <div class="row">
             <div class="col-md-9 col-md-7 col-lg-10 mx-auto">
               <div class="card card-signin my-5">
                 <div class="card-body1">
-                  <h4 class="card-title text-center ">Sign In:</h4>
-                  <form  id="form_login" method="" action="" class="form-signin">
+                  <h4 style="font-size: 2em;" class="card-title text-center ">Sign In:</h4>
+                  <form style="margin-top: 2%" id="form_login" method="" action="" class="form-signin">
                     <div class="form-label-group">
-                      <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
+                      <input  style="height:3em"  type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
                       <label for="inputEmail">Email address</label>
-                    </div>
-                    
-                    
+                    </div>     
                     <div class="form-label-group">
-                      <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+                      <input  style="height:3em" type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
                       <label for="inputPassword">Password</label>
-                    </div>
-  
-                   
+                    </div>  
                   </form>
-                  <button class="btn btn-lg btn-primary btn-block text-uppercase" id="user_btn">Sign in</button>
-                  <hr class="my-4">
+                  <button style="margin-top: 16%" class="btn btn-lg btn-primary btn-block text-uppercase" id="user_btn">Sign in</button>    
+                </form>
                 </div>
               </div>
             </div>
