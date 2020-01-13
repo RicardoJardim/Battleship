@@ -1,8 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <style>
-  @import url(https://fonts.googleapis.com/css?family=Lato:400, 300, 700);
-  @import url(https://fonts.googleapis.com/css?family=Rubik:400, 900);
-
   * {
     box-sizing: border-box;
   }
@@ -119,21 +116,32 @@
   .test23 {
     display: flex;
     flex-flow: column;
-    margin-top: 3%;
+    margin-top: 1%;
     margin-left: 3%;
     width: 40%;
     flex: 1;
   }
 
   #tourn {
-    margin-top: 10%;
+    margin-top: 5%;
   }
-
   #umvsum {
-    margin-bottom: 10%;
+    margin-bottom: 5%;
   }
   hr {
     width: 98%;
+  }
+
+  #logout{
+    margin-left: 2.8%;
+  }
+
+  #leaderboard{
+    margin-left: 3%;
+  }
+
+  #chooseShips{
+    margin-left: 3%;
   }
 </style>
 
@@ -156,9 +164,11 @@
         <hr />
       </div>
       <br />
-      <button id="logout">
-        Logout
-      </button>
+      <div>
+      </div>
+      <button id="logout">Logout</button>
+      <button id="leaderboard">Leaderboard</button>
+      <button id="chooseShips">Ships</button>
     </div>
   </div>
 </div>

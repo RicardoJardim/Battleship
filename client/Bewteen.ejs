@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
   <head>
     <link
     rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
   />
-</head>
     <link
       rel="shortcut icon"
       type="image/x-icon"
@@ -24,14 +25,11 @@
       display: block;
     }
     #show {
-      display: none;
-      
+      display: none;   
     }
   </style>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-
+ 
   <body id="background">
     <div id="hide">
       <%- include('partials/choseGame') %>
@@ -40,6 +38,8 @@
       <%- include('partials/game') %>
     </div>
   </body>
+
+
   <script>
       var username = localStorage.getItem("username");
       var email = localStorage.getItem("email");
@@ -72,10 +72,14 @@
     $("#umvsum").click(Play1vs1);
     $("#tourn").click(PlayTournament);
     $("#logout").click(Logout);
+    $("#leaderboard").click(LeaderBoard);
+    $("#chooseShips").click(ChooseShips);
 
     var socket;
+
+    //************************************Buttons****************************************
+    //Play 1 contra 1
     function Play1vs1() {
-      // alert("Bora jogar!!");
       socket = io.connect();
       
       socket.emit("join", username,email,points);
@@ -105,9 +109,50 @@
         }
       });
     }
-function afterConnect(){
+    //Botao jogar torneio
+    function PlayTournament() {
+    alert("Bora jogar Tournament!!");
+    }
+     //logout
+    function Logout() {
+    var token = localStorage.getItem("authorization");
+    var email = localStorage.getItem("email");
+    if (token) {
+      $.ajax({
+        url: "/user/logged",
+        async: true,
+        type: "POST",
+        data: { email: email },
+        headers: {
+          authorization: token
+        },
+        success: function(data) {
+          console.log(data);
+          if (data.success == true) {
+            window.location = "/";
+            localStorage.clear();
+          }
+        },
+        error: function(data) {
+          console.log(data);
+        }
+      });
+    } else {
+      window.location = "/";
+      localStorage.clear();
+    }
+  }
+    //Mostra a Leaderboard
+    function LeaderBoard() {
+    alert("Bora LeaderBoard!!");
+    }
+    //Escolhe a estrategia(posição) dos barcos
+    function ChooseShips() {
+    alert("Bora ChooseShips!!");
+    }
+   //Trata de tudo depois de conectar a socket
+    function afterConnect(){
 
-       
       socket.on("disconnect", function() {
         console.log("Disconnected from server.");    
         $("#game").hide();
@@ -140,7 +185,6 @@ function afterConnect(){
         
       });
 
-      
       socket.on("gameover", function(isWinner) {
         Game.setGameOver(isWinner);
       });
@@ -149,14 +193,11 @@ function afterConnect(){
         $("#game").hide();
       });
 
-      
       $("#message-form").submit(function() {
         socket.emit("chat", $("#message").val());
         $("#message").val("");
         return false;
       });
- 
-
 
     var GameStatus = {
       inProgress: 1,

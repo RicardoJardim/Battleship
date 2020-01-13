@@ -47,19 +47,15 @@
     text-decoration: none;
     cursor: pointer;
   }
-
   /* -----------------------------------------
   =Default css to make the demo more pretty
 -------------------------------------------- */
-
   .clear {
     clear: both;
   }
-
   /* -----------------------------------------
   =CSS3 Loading animations
 -------------------------------------------- */
-
   .ring-1 {
     width: 6em;
     height: 6em;
@@ -127,40 +123,7 @@
     playAudio();
   }, 10);
 
-  function PlayTournament() {
-    alert("Bora jogar Tournament!!");
-  }
-
-  //logout
-  function Logout() {
-    var token = localStorage.getItem("authorization");
-    var email = localStorage.getItem("email");
-    if (token) {
-      $.ajax({
-        url: "/user/logged",
-        async: true,
-        type: "POST",
-        data: { email: email },
-        headers: {
-          authorization: token
-        },
-        success: function(data) {
-          console.log(data);
-          if (data.success == true) {
-            window.location = "/";
-            localStorage.clear();
-          }
-        },
-        error: function(data) {
-          console.log(data);
-        }
-      });
-    } else {
-      window.location = "/";
-      localStorage.clear();
-    }
-  }
-
+  
   function playAudio() {
     x.play();
   }
