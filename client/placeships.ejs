@@ -36,6 +36,7 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
     />
   </head>
+
   <body>
     <div id="app">
       <v-app>
@@ -72,6 +73,7 @@
                           />
                           Vertical
                         </label>
+                        <br>
                         <label class="radio">
                           <input
                             type="radio"
@@ -84,18 +86,15 @@
                         </label>
                       </div>
                     </div>
-
-                    <div class="column is-2 is-offset-6">
-                      <a class="button is-primary" @click="startTheGame"
-                        >Iniciar</a
-                      >
-                    </div>
+                    <button class="button"
+                      @click="startTheGame"
+                       >Save</button>
+                      <button id="voltar" class="button">Go back</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <button id="voltar">Go back</button>
         </template>
       </v-app>
     </div>
@@ -498,8 +497,13 @@
     </script>
 
     <style scoped>
+      html{
+        overflow: hidden;
+      }
       #app {
         height: 100vh;
+        background-image: url(https://i.imgur.com/MM7wYMQ.jpg);
+       
       }
       .v-application--wrap {
         height: 100vh;
@@ -525,12 +529,24 @@
         padding: 50px;
         padding-top: 20px;
         padding-bottom: 10px;
+        background-color: rgb(255, 255, 255,0.85);
+        border-radius: 8px 8px  0 0;
+        width: 60%;
+        margin: 2% 0 0 20%;
+        padding: 2%;
+   
       }
 
       .box2 {
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: rgb(255, 255, 255,0.85);
+        width: 60%;
+        border-radius: 0 0 8px 8px  ;
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 1%;
       }
 
       /*FleetBoard*/
@@ -601,22 +617,21 @@
       }
 
       .tableboardcss .is-dark {
-        border: 1px solid black;
-        background: grey;
+        background: #123;
       }
 
       .table,
       .is-bordered,
       .is-fullwidth {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-        border: 1px solid black;
+        border: 1px solid lightcyan;
         height: 67.5vh;
         width: 65vh;
       }
 
       .table > thead > tr > td {
         border: 1px solid black;
-        background: black;
+        background:rgb(65, 103, 226);
         color: white;
         text-align: center;
         vertical-align: middle;
@@ -626,7 +641,7 @@
 
       .table > tbody > tr > td.h {
         border: 1px solid black;
-        background: black;
+        background:rgb(65, 103, 226);
         color: white;
         text-align: center;
         vertical-align: middle;
@@ -635,15 +650,53 @@
       }
 
       .table > tbody > tr > td.b {
-        border: 1px solid black;
-
+        background-color: lightblue;
         height: 5vh;
         width: 5vh;
       }
 
       .table > tbody > tr > td.b:hover {
-        background: burlywood;
+        background: rgb(65, 103, 226);
+      }
+    
+      .iniciar a{
+        background: #123;
+        transition: all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
+        border: 4px solid #fff;
+        padding: 10px;
+        color: white;
+        font-family: "Rubik", sans-serif;
+        text-transform: uppercase;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .iniciar a:hover, a:active {
+        background-color: red;
+      }
+
+      .button{
+        background: #123;
+        transition: all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
+        border: 4px solid #fff;
+        padding: 10px;
+        color: white;
+        font-family: "Rubik", sans-serif;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .button:hover{
+        background-color: red;
+      }
+
+      .control{
+        padding-left: 10%;
+      }
+
+      .radio input{
+       width: 20px;
       }
     </style>
   </body>
+  
 </html>
