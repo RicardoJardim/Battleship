@@ -1,63 +1,393 @@
-<div class="container">
-  <div class="row vertical-center-row">
-    <div class="col-md-12">
-      <!-- Game -->
-      <div id="game">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                Battleship Game #<span id="game-number"></span>
-              </div>
-              <div class="panel-body">
-                <!-- Player grids -->
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <!-- Vuetify Documentation -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  
+  <!-- CDNJS Vuetify Links -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.1.12/vuetify.css" integrity="sha256-eWzVOWu5XL0CR2w08ovD5qMN3UXliNf9e82W+eZwQ+E=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.1.12/vuetify.min.css" integrity="sha256-QAvBxOUdSj+MaIojNHfbf9a3HhORmrLlgFqgMiKMEb0=" crossorigin="anonymous" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+
+      <template>
+        <div class="container">
+          <div class="row vertical-center-row">
+            <div class="col-md-12">
+
+              <!-- Game -->
+              <div id="game">
                 <div class="row">
-                  <div class="col-md-6 player-grid text-center">
-                    <h3>You</h3>
-                    <canvas id="canvas-grid1" width="361" height="361"
-                      >Browser does not support canvas.</canvas
-                    >
-                  </div>
-                  <div class="col-md-6 player-grid text-center">
-                    <h3>Opponent</h3>
-                    <canvas id="canvas-grid2" width="361" height="361"
-                      >Browser does not support canvas.</canvas
-                    >
+                  <div class="col-md-12">
+
+                    <!-- Panel -->
+                    <div class="panel panel-primary">
+
+                      <!-- Header -->
+                      <div class="panel-heading">
+                        Battleship Game #<span id="game-number"></span>
+                      </div>
+                      <!-- -->
+
+                      <div class="panel-body">
+                        <!-- Player Grids -->
+                        <div class="row">
+
+                          <!-- Our Grid -->
+                          <div class="col-md-6 player-grid text-center">
+                            <h3>You</h3>
+                            <table-board class="tableboardcss" :code=0></table-board>
+                          </div>
+                          <!--  -->
+
+                          <!-- Opponent Grid  -->
+                          <div class="col-md-6 player-grid text-center">
+                            <h3>Opponent</h3>
+                            <table-board class="tableboardcss" :code=1></table-board>
+                          </div>
+                          <!--  -->
+
+                        </div>
+                        <!--  -->
+                      </div>
+
+                      <!-- Chat -->
+                      <ul class="list-group">
+
+                        <!-- Status -->
+                        <li class="list-group-item text-center" id="turn-status"></li>
+                        <!--  -->
+        
+                        <!-- Chat messages -->
+                        <li class="list-group-item" id="messages-list">
+                          <ul id="messages"></ul>
+                        </li>
+                        <!--  -->
+        
+                        <!-- Send chat message form -->
+                        <li class="list-group-item">
+                          <form id="message-form" action="">
+                            <div class="input-group">
+                              <input
+                                id="message"
+                                class="form-control"
+                                autocomplete="off"
+                              />
+                              <div class="input-group-btn">
+                                <button class="btn btn-primary">
+                                  Send Message
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                        </li>
+                        <!--  -->
+
+                      </ul>
+                      <!--  -->
+
+                    </div>
+                    <!--  -->
+
                   </div>
                 </div>
               </div>
+              <!--  -->
 
-              <ul class="list-group">
-                <!-- Status -->
-                <li class="list-group-item text-center" id="turn-status"></li>
-
-                <!-- Chat messages -->
-                <li class="list-group-item" id="messages-list">
-                  <ul id="messages"></ul>
-                </li>
-
-                <!-- Send chat message form -->
-                <li class="list-group-item">
-                  <form id="message-form" action="">
-                    <div class="input-group">
-                      <input
-                        id="message"
-                        class="form-control"
-                        autocomplete="off"
-                      />
-                      <div class="input-group-btn">
-                        <button class="btn btn-primary">
-                          Send Message
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </template>
+
+    </v-app>
   </div>
-</div>
+
+
+
+  <!-- Vuetify Documentation -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+ 
+
+  <!-- CDNJs Vue -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script>
+
+
+  <!-- CDNJS Vuetify-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.1.12/vuetify.js" integrity="sha256-vpGloYTtFYxXd3onBTpMrhcqlz2E9iKL2NB7XfmEluw=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vuetify/2.1.12/vuetify.min.js" integrity="sha256-0SQFpYrI866B5xJRmXyNLL7GfCH6P6mzqioDhfKky3U=" crossorigin="anonymous"></script>
+
+  <!-- CDNJs Vue Router-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.1.3/vue-router.js" integrity="sha256-1Dr3ChysPawKq+arX2+sLoxyI/H6m4UVJWZOtvKdeQ8=" crossorigin="anonymous"></script>
+
+  <script>
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Component - TableBoard                                                                                      //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    Vue.component('TableBoard', {
+
+      props: {
+        code: {type: Number, default: null}
+      },
+
+      template: ` <div>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <td v-for="i in 11">{{i-1}}</td>
+                        </tr>
+                      </thead>
+                      
+                      <tbody v-if="code==0">
+                        
+                          <tr v-for="(y,index1) in tableUs" >
+                            <td class="h">{{index1+1}}</td>
+                            <td v-for="(x,index) in y" :class="status(x)" ></td>
+                          </tr>
+                                
+                      </tbody>
+
+                      <tbody v-if="code==1">
+                        
+                        <tr v-for="(y,index1) in tableTh" >
+                          <td class="h">{{index1+1}}</td>
+                          <td v-for="(x,index) in y" :class="status(x)" @click="select({y: index1,x: index})""></td>
+                        </tr>
+                              
+                    </tbody>
+
+                    </table>
+                  </div>`,
+
+      data () {
+        return {
+
+          tableUs: [
+                      [
+                        -1, -1, -1, -1, -1,
+                        -1, -1, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1,  3,  3,
+                        3, -1, -1, -1, -1
+                      ],
+                      [
+                        1, -1, -1, -1, -1,
+                        -1, -1, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1, -1,  2,
+                        2, -1, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1, -1, -1,
+                        -1, -1, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1,  4,  4,
+                        4,  4, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1, -1, -1,
+                        -1, -1, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1,  5,  5,
+                        5,  5,  5, -1, -1
+                      ],
+                      [
+                        -1, -1, -1, -1, -1,
+                        -1, -1, -1, -1, -1
+                      ],
+                      [
+                        -1, -1, -1, -1, -1,
+                        -1, -1, -1, -1, -1
+                      ]
+                    ],
+          tableTh: [
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                      [
+                        0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0
+                      ],
+                    ],
+
+        }
+      },
+
+      methods: {
+
+        status(field) {
+          if (this.code==0){
+            return field != -1 ? "is-dark" : "c";
+          }else if (this.code==1){
+            return "b";
+          }},
+        
+        select(args) {
+          alert (args.y+' '+args.x)
+        }
+
+
+        },
+
+      // Mounted/Created Functions Of This Component
+
+
+
+    }),
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // FIM DO COMPONENTE                                                                                           //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Instância da VUE APP                                                                                        //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    new Vue({
+
+      el: '#app',
+
+      vuetify: new Vuetify(),
+
+      data () {
+        return {
+          code:null,
+        }
+      },
+
+      methods: {
+
+      },
+
+      // Mounted/Created Functions
+
+
+
+    })
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // FIM DO COMPONENTE                                                                                           //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS EXTERNOS AO VUE                                                                                     //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  
+
+  </script>
+
+  <style scoped>
+
+    
+
+    /*TableBoard*/
+
+    .tablediv {
+        height: 67.5vh;
+        width: 65vh;
+        display: block;
+      }
+
+      .tableboardcss .is-dark {
+        border: 1px solid black;
+        background: grey;
+      }
+
+      .table,
+      .is-bordered,
+      .is-fullwidth {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border: 1px solid black;
+        height: 67.5vh;
+        width: 65vh;
+      }
+
+      .table > thead > tr > td {
+        border: 1px solid black;
+        background: black;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        height: 5vh;
+        width: 5vh;
+      }
+
+      .table > tbody > tr > td.h {
+        border: 1px solid black;
+        background: black;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        height: 5vh;
+        width: 5vh;
+      }
+
+      .table > tbody > tr > td.b {
+        border: 1px solid black;
+
+        height: 5vh;
+        width: 5vh;
+      }
+
+      .table > tbody > tr > td.b:hover {
+        background: burlywood;
+      }
+
+      .table > tbody > tr > td.c {
+        border: 1px solid black;
+
+        height: 5vh;
+        width: 5vh;
+      }
+
+
+
+  </style>
+
+  
+
+</body>
+</html>
