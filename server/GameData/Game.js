@@ -15,18 +15,18 @@ class Game {
       new Player(idPlayer2, email2)
     ];
   }
-  //ID DO PLAYER
+  //ID DO PLAYER -> FUNCIONA
   getPlayerId(player) {
     return this.players[player].id;
   }
-  //ID DO VENCEDOR
+  //ID DO VENCEDOR -> FUNCIONA
   getWinnerId() {
     if (this.winningPlayer === null) {
       return null;
     }
     return this.players[this.winningPlayer].id;
   }
-  //ID DO PERDEDOR
+  //ID DO PERDEDOR -> FUNCIONA
   getLoserId() {
     var loser;
     if (this.winningPlayer === null) {
@@ -40,7 +40,7 @@ class Game {
     return this.players[loser].id;
   }
 
-  //MUDA DE JOGADOR
+  //MUDA DE JOGADOR ->FUNCIONA
   switchPlayer() {
     var current;
     if (this.currentPlayer == 0) {
@@ -51,7 +51,7 @@ class Game {
     this.currentPlayer = current;
   }
 
-  //SAI DO JOGO
+  //SAI DO JOGO -> FUNCIONA
   abortGame(player) {
     this.gameStatus = GameStatus.gameOver;
     var winner;

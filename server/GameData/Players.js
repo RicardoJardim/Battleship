@@ -1,13 +1,13 @@
 const { GameSetting } = require("./ShipsAndMore.js");
 
+//CLASSE SHP
 class Ship {
   constructor(size) {
-    this.x = 0;
-    this.y = 0;
+    this.positions = [];
     this.size = size;
     this.hits = 0;
   }
-
+  //VERIFICA SE MORRERU
   Morreu() {
     return this.hits >= this.size;
   }
@@ -30,7 +30,7 @@ class Player {
       }
     }
   }
-  //TIRO NO ADVERSÁRIO
+  //TIRO NO ADVERSÁRIO -> FALTA ISTO
   shoot(gridIndex) {
     if (this.shipGrid[gridIndex] >= 0) {
       //ACERTOU NO BARCO ADVERSÁRIO
@@ -43,12 +43,11 @@ class Player {
       return false;
     }
   }
-  //TODOS OS BARCOS QUE SE AFUNDARAM
+  //TODOS OS BARCOS QUE SE AFUNDARAM -> FEITO
   getSunkShips() {
-    var i,
-      sunkShips = [];
+    var sunkShips = [];
 
-    for (i = 0; i < this.ships.length; i++) {
+    for (var i = 0; i < this.ships.length; i++) {
       if (this.ships[i].Morreu()) {
         sunkShips.push(this.ships[i]);
       }
@@ -56,36 +55,37 @@ class Player {
 
     return sunkShips;
   }
-  //CRIA BARCOS NA GRID
-  createShips() {
-    var gridIndex,
-      x = [1, 3, 5, 8, 8],
-      y = [1, 2, 5, 2, 8];
+  //CRIA BARCOS NA GRID -> FEITO
+  createShips(boats) {
+    var sorted = boats.sort((a, b) => (a.id > b.id ? 1 : -1));
+    console.log(sorted);
 
     var ship;
-
     for (var shipIndex = 0; shipIndex < GameSetting.ships.length; shipIndex++) {
       ship = new Ship(GameSetting.ships[shipIndex]);
-      ship.x = x[shipIndex];
-      ship.y = y[shipIndex];
 
-      // place ship array-index in shipGrid
-      gridIndex = ship.y * GameSetting.gridCols + ship.x;
-      for (var i = 0; i < ship.size; i++) {
-        this.shipGrid[gridIndex] = shipIndex;
-        gridIndex += ship.horizontal ? 1 : GameSetting.gridCols;
-      }
-
+      var elId = sorted.filter(function(el) {
+        return el.id == shipIndex + 1;
+      });
+      ship.positions = elId;
       this.ships.push(ship);
     }
+
+    for (var i = 0; i < ship.size; i++) {
+      this.shipGrid[sorted[i].y][sorted[i].x] = sorted[i].id;
+    }
+
+    console.log("-----------------");
+    console.log(this.ships);
+    console.log("-----------------");
+    console.log(this.shipGrid);
   }
 
-  //BARCOS QUE FALTAM MORRER
+  //BARCOS QUE FALTAM MORRER -> FEITO
   getShipsLeft() {
-    var i,
-      shipCount = 0;
+    var shipCount = 0;
 
-    for (i = 0; i < this.ships.length; i++) {
+    for (var i = 0; i < this.ships.length; i++) {
       if (!this.ships[i].Morreu()) {
         shipCount++;
       }
@@ -95,6 +95,7 @@ class Player {
   }
 }
 
+//CRIA ARRAY 2D
 function create2DArray(numRows, numColumns) {
   let array = new Array(numColumns);
 

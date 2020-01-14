@@ -77,12 +77,16 @@ io.sockets.on("connection", socket => {
       );
       console.log(game);
 
+      game.players[0].createShips(users[x[0]].ships);
+      game.players[1].createShips(users[x[1]].ships);
+
       users[x[0]].player = 0;
       users[x[1]].player = 1;
       users[x[0]].inGame = game;
       users[x[1]].inGame = game;
 
       // send initial ship placements
+      //ver isto
       io.to(x[0]).emit("update", game.getGameState(0, 0));
       io.to(x[1]).emit("update", game.getGameState(1, 1));
 

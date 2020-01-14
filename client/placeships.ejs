@@ -95,9 +95,9 @@
               </div>
             </div>
           </div>
+          <button id="voltar">Go back</button>
         </template>
       </v-app>
-      <button id="voltar">Go back</button>
     </div>
 
     <!-- Vuetify Documentation -->
@@ -455,8 +455,7 @@
                     let ship = {
                       x: x,
                       y: y,
-                      id: this.$refs.tableBoard.columns[y].rows[x].idShip,
-                      status: true
+                      id: this.$refs.tableBoard.columns[y].rows[x].idShip
                     };
                     fleet.push(ship);
                   }
