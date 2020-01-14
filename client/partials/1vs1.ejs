@@ -6,8 +6,9 @@
   body,
   html {
     height: 100%;
-    min-height: 100%;
-    overflow: hidden;
+    min-height: 100vh;
+    max-width: 100vh;
+    overflow-x: hidden;
   }
 
   #card-container {
@@ -17,7 +18,6 @@
     top: 42%;
     left: 48%;
     margin: -250px 0 0 -460px;
-    
   }
   #card {
     animation: backAn 60s infinite;
@@ -134,15 +134,15 @@
     width: 98%;
   }
 
-  #logout{
+  #logout {
     margin-left: 2.8%;
   }
 
-  #leaderboard{
+  #leaderboard {
     margin-left: 3%;
   }
 
-  #chooseShips{
+  #chooseShips {
     margin-left: 3%;
     position: relative;
     z-index: 1;
@@ -151,7 +151,7 @@
 
 <div id="card-container" data-offset="2">
   <div class="pg">
-    <img  src="https://i.imgur.com/dGKS4Af.png" />
+    <img src="https://i.imgur.com/dGKS4Af.png" />
   </div>
   <div id="card">
     <div class="shine"></div>
@@ -168,8 +168,7 @@
         <hr />
       </div>
       <br />
-      <div>
-      </div>
+      <div></div>
       <button id="logout">Logout</button>
       <button id="leaderboard">Leaderboard</button>
       <button id="chooseShips">Ships</button>
