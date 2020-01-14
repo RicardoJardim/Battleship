@@ -26,6 +26,7 @@
     }
     #show {
       display: none;
+      overflow: auto;
     }
   </style>
 
@@ -65,8 +66,9 @@
         }
       });
     }
+    var boats;
+    verify();
 
-    $("#umvsum").click(Play1vs1);
     $("#tourn").click(PlayTournament);
     $("#logout").click(Logout);
     $("#leaderboard").click(function() {
@@ -79,11 +81,20 @@
     var socket;
 
     //************************************Buttons****************************************
+
+    function verifyFunction() {
+      if (boats) {
+        Play1vs1();
+      } else {
+        alert("Go pick some boats");
+      }
+    }
+
     //Play 1 contra 1
     function Play1vs1() {
       socket = io.connect();
 
-      socket.emit("join", username, email, points);
+      socket.emit("join", username, email, points, boats);
 
       var id = this.id;
       var modal = document.getElementById("myModal");
@@ -102,6 +113,7 @@
         if (data.success == true) {
           $("#hide").css("display", "none");
           $("#show").css("display", "block");
+          // $("#show").css({ display: "block", overflow: "auto" });
 
           console.log("Starting game");
           $("#game-number").html(data.gameID);
@@ -222,6 +234,31 @@
           }
         });
       }
+    }
+    function verify() {
+      if (token) {
+        $.ajax({
+          url: "/ships/" + email,
+          async: false,
+          type: "GET",
+          headers: {
+            authorization: token
+          },
+          success: function(data) {
+            console.log(data);
+            if (data.success == true) {
+              boats = data.data.ships;
+            }
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+      } else {
+        console.log("No permissions");
+        boats = null;
+      }
+      $("#umvsum").click(verifyFunction);
     }
   </script>
 </html>

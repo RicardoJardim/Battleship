@@ -21,6 +21,8 @@ const { Game } = require("./GameData/Game");
 
 //Controllers
 const userController = require("./controller/UserController");
+const gameController = require("./controller/GameController");
+const gridController = require("./controller/GridController");
 
 //Utils
 var mongoUtil = require("./utils/mongoConnection");
@@ -48,10 +50,11 @@ const connections = [];
 io.sockets.on("connection", socket => {
   console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
 
-  socket.on("join", function(nome, email, points) {
+  socket.on("join", function(nome, email, points, boats) {
     users[socket.id] = {
       points: points,
       username: nome,
+      ships: boats,
       email: email,
       inGame: null,
       player: null
@@ -104,20 +107,15 @@ io.sockets.on("connection", socket => {
 
   //SAIR DA ESPERA
   socket.on("leaveWaiting", function() {
-    console.log(socket.id);
     delete users[socket.id];
   });
 
   socket.on("opponentleft", function(data) {
-    console.log("FAZER UPDATE NOS PONTOS");
-    console.log(data.id);
-    console.log(users[data.id]);
-
     userController.updatePoints(
       { email: users[data.id].email },
       { points: parseInt(users[data.id].points) + 100 },
       function(result) {
-        console.log(result);
+        saveGame(users[data.id].inGame);
       }
     );
   });
@@ -195,6 +193,33 @@ io.sockets.on("connection", socket => {
       }
     }
   });
+
+  socket.on("ships", function(email, boats) {
+    console.log("BOATS");
+    console.log(boats);
+    gridController.findGrid(email, function(data) {
+      console.log(data);
+      if (data.success == true) {
+        console.log("update");
+
+        gridController.updateGrid(email, boats, function(data) {
+          console.log(data);
+
+          if (data.success == true) {
+            io.to(socket.id).emit("ships", { success: true });
+          }
+        });
+      } else {
+        gridController.registerGrid({ email: email, ships: boats }, function(
+          data
+        ) {
+          if (data.success == true) {
+            io.to(socket.id).emit("ships", { success: true });
+          }
+        });
+      }
+    });
+  });
 });
 
 //Routes
@@ -212,7 +237,12 @@ app.get("/chose/:token", (req, res) => {
 //Retorna todos os utilizadores
 app.get("/users", auth, (req, res) => {
   userController.getAllUsers(function(result) {
-    console.log(result.length);
+    res.json(result);
+  });
+});
+
+app.get("/ships/:email", auth, (req, res) => {
+  gridController.findGrid(req.params.email, function(result) {
     res.json(result);
   });
 });
@@ -220,7 +250,6 @@ app.get("/users", auth, (req, res) => {
 //Verifica se está ativo para realizar logout
 app.post("/user/logged", auth, (req, res) => {
   userController.verifyLogged(req.body, function(result) {
-    console.log(result);
     res.json(result);
   });
 });
@@ -228,7 +257,6 @@ app.post("/user/logged", auth, (req, res) => {
 //REGISTO
 app.post("/register", (req, res) => {
   userController.registerAuth(req.body, function(result) {
-    console.log(result);
     if (result.success == false) {
       res.json(result);
     } else {
@@ -240,10 +268,10 @@ app.post("/register", (req, res) => {
     }
   });
 });
+
 //LOGIN
 app.post("/login", (req, res) => {
   userController.loginAuth(req.body, function(result) {
-    console.log(result);
     if (result.success == false) {
       res.json(result);
     } else {
@@ -262,7 +290,6 @@ app.get("/verify", auth, (req, res) => {
 
 app.get("/user/:email", auth, (req, res) => {
   userController.findPoints(req.params.email, function(data) {
-    console.log(data);
     res.json({ data: data.data.points });
   });
 });
@@ -270,7 +297,6 @@ app.get("/user/:email", auth, (req, res) => {
 app.get("/leaderboard/:token", (req, res) => {
   if (req.params.token) {
     userController.orderPoints(function(result) {
-      console.log(result);
       res.render("leaderboard", { data: result });
     });
   }
@@ -292,7 +318,6 @@ mongoUtil.connectToServer(function(err) {
 
 //SAIO DO JOGO
 function leaveGame(socket) {
-  console.log(users[socket.id]);
   if (users[socket.id].inGame !== null) {
     console.log(
       new Date().toISOString() +
@@ -341,9 +366,7 @@ function checkGameOver(game) {
 
 //APENAS VE OS CLIENTES NA ROOM
 function seeClients(strings) {
-  io.of("/").adapter.clients([strings], (err, clients) => {
-    console.log(clients);
-  });
+  io.of("/").adapter.clients([strings], (err, clients) => {});
 }
 
 //RETORNA TODOS OS CLIENTES DA ROOM ESPECIFICA
@@ -353,26 +376,10 @@ function getClientsInRoom(string) {
     clientsArray.push(io.sockets.adapter.rooms[string][id]);
   }
   var keys = Object.keys(clientsArray[0]);
-  console.log(keys);
 
   return keys;
 }
 
-/*
-io.sockets.on("connection", socket => {
-  console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
-
-  connections.push(socket);
-  console.log(" %s sockets is connected", connections.length);
-
-  socket.on("disconnect", () => {
-    connections.splice(connections.indexOf(socket), 1);
-  });
-
-  socket.on("sending message", message => {
-    console.log("Message is received :", message);
-
-    io.sockets.emit("new message", { message: message });
-  });
-});
-*/
+function saveGame(body) {
+  gameController.registerGame(body, function(data) {});
+}
