@@ -217,6 +217,8 @@
       socket.on("gameover", function(isWinner) {
         if (isWinner) {
           $("#messages").append("<li> Congratulations you won the game </li>");
+          $("#messages").append("<li> You Won the game and 100 points</li>");
+
           $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
 
           socket.emit("opponentleft", { id: socket.id });

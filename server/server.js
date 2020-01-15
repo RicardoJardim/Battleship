@@ -121,14 +121,6 @@ io.sockets.on("connection", socket => {
     );
   });
 
-  //SAIR DO JOGO
-  socket.on("leave", function() {
-    if (users[socket.id].inGame !== null) {
-      leaveGame(socket);
-    }
-    delete users[socket.id];
-  });
-
   //QUANDO DISCONECTA VERIFICA SE TA EM JOGO
   socket.on("disconnect", function() {
     console.log(
