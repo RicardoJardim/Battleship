@@ -1,6 +1,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-<style>
+<style scoped>
   /* The Modal (background) */
   .modal {
     display: none; /* Hidden by default */
@@ -82,13 +82,6 @@
   }
 </style>
 
-<audio autoplay id="myaudio2">
-  <source
-    src="https://dc552.4shared.com/img/hDJjw-XCiq/f24e731f/dlink__2Fdownload_2FhDJjw-XCiq_2Fmusic.mp3_3Fsbsr_3Db9d9f7aeba80e257924c49737d21396fa32_26bip_3DMTkzLjEzNi4yMzIuNA_26lgfp_3D52_26bip_3DMTkzLjEzNi4yMzIuNA/preview.mp3"
-    type="audio/mpeg"
-  />
-</audio>
-
 <%- include('./1vs1') %>
 
 <!-- The Modal -->
@@ -109,13 +102,4 @@
   window.onpopstate = function() {
     history.go(1);
   };
-
-  var x = document.getElementById("myaudio2");
-  setInterval(function() {
-    playAudio();
-  }, 10);
-
-  function playAudio() {
-    x.play();
-  }
 </script>

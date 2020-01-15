@@ -26,7 +26,6 @@
     }
     #show {
       display: none;
-      overflow: auto;
     }
     #background {
       background-image: url(https://i.imgur.com/yVelP37.jpg);
@@ -36,11 +35,19 @@
       background-repeat: no-repeat;
     }
     body {
-      margin: 0%;
+      margin: 0px;
+      width: 100vw;
+      height: 100vh;
     }
   </style>
 
   <body id="background">
+    <audio id="myaudio2">
+      <source
+        src="https://dc552.4shared.com/img/hDJjw-XCiq/f24e731f/dlink__2Fdownload_2FhDJjw-XCiq_2Fmusic.mp3_3Fsbsr_3Db9d9f7aeba80e257924c49737d21396fa32_26bip_3DMTkzLjEzNi4yMzIuNA_26lgfp_3D52_26bip_3DMTkzLjEzNi4yMzIuNA/preview.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
     <div id="hide">
       <%- include('partials/choseGame') %>
     </div>
@@ -50,6 +57,12 @@
   </body>
 
   <script>
+    var sound = document.getElementById("myaudio2");
+    setInterval(function() {
+      sound.volume = 0.1;
+      sound.play();
+    }, 10);
+
     var username = localStorage.getItem("username");
     var email = localStorage.getItem("email");
     var points = localStorage.getItem("points");
@@ -69,7 +82,7 @@
           console.log(number);
 
           localStorage.setItem("points", number);
-          $("#points").append(number);
+          $("#points").append(" " + number);
         },
         error: function(data) {
           console.log(data);
@@ -123,18 +136,22 @@
         if (data.success == true) {
           $("#hide").css("display", "none");
           $("#show").css("display", "block");
-          // $("#show").css({ display: "block", overflow: "auto" });
 
           console.log("Starting game");
           $("#game-number").html(data.gameID);
-          //Game.initGame();
+
           afterConnect();
         }
+      });
+
+      //QUANDO FAZ UPDATE DO JOGO
+      socket.on("update", function(gameState) {
+        dataToVue(gameState);
       });
     }
     //Botao jogar torneio
     function PlayTournament() {
-      alert("Bora jogar Tournament!!");
+      alert("Buy the full version to unlock this feature");
     }
     //logout
     function Logout() {
@@ -167,20 +184,12 @@
     }
     //Mostra a Leaderboard
 
-    //Escolhe a estrategia(posição) dos barcos
-
     //Trata de tudo depois de conectar a socket
     function afterConnect() {
-      //SAIU DO JOGO
+      //DISCONENECT DO JOGO
       socket.on("disconnect", function() {
         console.log("Disconnected from server.");
         $("#game").hide();
-      });
-
-      //QUANDO FAZ UPDATE DO JOGO
-      socket.on("update", function(gameState) {
-        Game.setTurn(gameState.turn);
-        Game.updateGrid(gameState.gridIndex, gameState.grid);
       });
 
       //CHAT
@@ -206,11 +215,15 @@
 
       //ACABA O JOGO
       socket.on("gameover", function(isWinner) {
-        Game.setGameOver(isWinner);
-      });
+        if (isWinner) {
+          $("#messages").append("<li> Congratulations you won the game </li>");
+          $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
 
-      socket.on("leave", function() {
-        $("#game").hide();
+          socket.emit("opponentleft", { id: socket.id });
+        } else {
+          $("#messages").append("<li> You lost </li>");
+          $("#messages-list").scrollTop($("#messages-list")[0].scrollHeight);
+        }
       });
 
       //ENVIAR MENSAGEM
@@ -220,12 +233,19 @@
         return false;
       });
 
-      var GameStatus = {
-        inProgress: 1,
-        gameOver: 2
-      };
+      //UPDATE GRID THEM
+      socket.on("updateGrid", function(data) {
+        console.log(data);
+        changeTh(data);
+      });
+      //UPDATE GRID ME
+      socket.on("updateGridMe", function(data) {
+        console.log(data);
+        changeMe(data);
+      });
     }
 
+    //FUNCAO GERAL PARA MUDAR DE PAGINA
     function changePageTo(goTo) {
       var token = localStorage.getItem("authorization");
       if (token) {
@@ -252,6 +272,7 @@
         });
       }
     }
+    //VERIFICA SE TEM PREMISSOES
     function verify() {
       if (token) {
         $.ajax({

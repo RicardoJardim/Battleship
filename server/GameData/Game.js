@@ -72,13 +72,12 @@ class Game {
       opponent = 0;
     }
 
-    var gridIndex = position.y * GameSetting.gridCols + position.x;
-
     if (
-      this.players[opponent].shots[gridIndex] === 0 &&
+      this.players[opponent].shots[position.y][position.x] == 0 &&
       this.gameStatus === GameStatus.inProgress
     ) {
-      if (!this.players[opponent].shoot(gridIndex)) {
+      var saveStatus = this.players[opponent].shoot(position.y, position.x);
+      if (!saveStatus) {
         this.switchPlayer();
       }
 
@@ -94,34 +93,27 @@ class Game {
         this.winningPlayer = winner;
       }
 
-      return true;
+      return { savedStatus: saveStatus, success: true };
     }
 
-    return false;
+    return { savedStatus: saveStatus, success: false };
   }
+
   //ESTADO DO JOGO
+
   getGameState(player, gridOwner) {
-    var gridAux;
-    if (gridOwner == player) {
-      gridAux = 0;
-    } else gridAux = 1;
     return {
       turn: this.currentPlayer === player,
-      gridIndex: gridAux,
-      grid: this.getGrid(gridOwner, player !== gridOwner)
+      grid: this.getGrid(gridOwner, player)
     };
   }
+
   //GRID
-  getGrid(player, hideShips) {
-    var shipsAux;
-    if (hideShips) {
-      shipsAux = this.players[player].getSunkShips();
-    } else {
-      shipsAux = this.players[player].ships;
-    }
+
+  getGrid(player) {
     return {
       shots: this.players[player].shots,
-      ships: shipsAux
+      ships: this.players[player].shipGrid
     };
   }
 }

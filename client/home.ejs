@@ -63,7 +63,7 @@
     </audio>
 
     <div class="body">
-      <h1 class="test">Age of BattleShip 2</h1>
+      <h1 class="test">Age of BattleShips 2</h1>
       <div class="container_test">
         <%- include('partials/user_partial') %> <%-
         include('partials/register_partial') %>
@@ -177,7 +177,7 @@
     }
 
     function validateEmail(content, element) {
-      if (!content.match(/^[a-zA-Z0-9]*@[a-z]*\.(com|pt|org)$/)) {
+      if (!content.match(/^[a-zA-Z0-9._]*@[a-z]*\.(com|pt|org)$/)) {
         $(element).css("background-color", "#ebdf5e");
         $(element).after(
           '<p style="color:#c2b100"> Formatação de email incorrecta </p>'

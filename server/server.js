@@ -63,8 +63,6 @@ io.sockets.on("connection", socket => {
     socket.join(gameRoom);
     //seeClients(gameRoom);
     var x = getClientsInRoom(gameRoom);
-    console.log(x.length);
-    console.log(users);
 
     if (x.length >= 2) {
       console.log(users[x[0]].email + " " + users[x[1]].email);
@@ -75,7 +73,6 @@ io.sockets.on("connection", socket => {
         x[1],
         users[x[1]].email
       );
-      console.log(game);
 
       game.players[0].createShips(users[x[0]].ships);
       game.players[1].createShips(users[x[1]].ships);
@@ -84,11 +81,6 @@ io.sockets.on("connection", socket => {
       users[x[1]].player = 1;
       users[x[0]].inGame = game;
       users[x[1]].inGame = game;
-
-      // send initial ship placements
-      //ver isto
-      io.to(x[0]).emit("update", game.getGameState(0, 0));
-      io.to(x[1]).emit("update", game.getGameState(1, 1));
 
       console.log(
         new Date().toISOString() +
@@ -106,6 +98,10 @@ io.sockets.on("connection", socket => {
         gameID: game.id
       });
       gameIdCounter++;
+
+      //CRIA AS GRIDS
+      io.to(x[0]).emit("update", game.getGameState(0, 0));
+      io.to(x[1]).emit("update", game.getGameState(1, 1));
     }
   });
 
@@ -114,6 +110,7 @@ io.sockets.on("connection", socket => {
     delete users[socket.id];
   });
 
+  //QUANDO SAI DO JOGO FAZ UPDATE NOS PONTOS
   socket.on("opponentleft", function(data) {
     userController.updatePoints(
       { email: users[data.id].email },
@@ -145,7 +142,7 @@ io.sockets.on("connection", socket => {
 
     delete users[socket.id];
   });
-  //CHAT
+  //CHAT ENTRE OS JOGADORES
   socket.on("chat", function(msg) {
     if (users[socket.id].inGame !== null && msg) {
       console.log(
@@ -170,34 +167,39 @@ io.sockets.on("connection", socket => {
     }
   });
 
-  //SHOT
+  //SHOT VER ISTO {y:y, x:x}
   socket.on("shot", function(position) {
     var game = users[socket.id].inGame;
-    var opponent;
-
+    console.log(game);
     if (game !== null) {
-      // Is it this users turn?
-      if (game.currentPlayer === users[socket.id].player) {
-        opponent = game.currentPlayer === 0 ? 1 : 0;
-
-        if (game.shoot(position)) {
-          // Valid shot
+      //TURNO DO PLAYER
+      if (game.currentPlayer == users[socket.id].player) {
+        console.log("-------------------------------------");
+        console.log("Current player: " + game.currentPlayer);
+        var opponent = game.currentPlayer == 0 ? 1 : 0;
+        console.log("Opponent: " + opponent);
+        console.log("----------SOCKET SHOT -----------");
+        var obj = game.shoot(position);
+        if (obj.success) {
+          console.log("----------SOCKET SHOT -----------");
           checkGameOver(game);
+          io.to(socket.id).emit("updateGrid", {
+            pos: position,
+            success: obj.savedStatus
+          });
 
-          // Update game state on both clients.
-          io.to(socket.id).emit(
-            "update",
-            game.getGameState(users[socket.id].player, opponent)
-          );
-          io.to(game.getPlayerId(opponent)).emit(
-            "update",
-            game.getGameState(opponent, opponent)
-          );
+          io.to(game.getPlayerId(opponent)).emit("updateGridMe", {
+            pos: position,
+            success: obj.savedStatus
+          });
+
+          console.log("-------------------------------------");
         }
       }
     }
   });
 
+  //ESCOLHA DA POSIÇÂO DOS BARCOS -> GAURDA NA DB A MODIFICAÇÂO OU ENTAO CRIA UM
   socket.on("ships", function(email, boats) {
     console.log("BOATS");
     console.log(boats);
@@ -320,7 +322,11 @@ mongoUtil.connectToServer(function(err) {
   });
 });
 
-//SAIO DO JOGO
+/*
+  FUNÇÔES AUXILIARES
+*/
+
+//SAIU DO JOGO
 function leaveGame(socket) {
   if (users[socket.id].inGame !== null) {
     console.log(
@@ -338,6 +344,7 @@ function leaveGame(socket) {
         message: "Opponent has left the game"
       });
 
+    // NOTIFICA QUE GANHOU O JOGO
     socket.broadcast
       .to("game" + users[socket.id].inGame.id)
       .emit("opponentleft", {
@@ -354,8 +361,6 @@ function leaveGame(socket) {
 
     users[socket.id].inGame = null;
     users[socket.id].player = null;
-
-    io.to(socket.id).emit("leave");
   }
 }
 
