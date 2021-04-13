@@ -170,8 +170,8 @@
 </div>
 
 <script>
-  var username = localStorage.getItem("username");
-  var email = localStorage.getItem("email");
+  var username = getCookie("username");
+  var email = getCookie("email");
 
   $("#username").append(" " + username);
 
@@ -180,7 +180,7 @@
     w = $(window).width(),
     h = $(window).height();
 
-  $(window).on("mousemove", function(e) {
+  $(window).on("mousemove", function (e) {
     var offsetX = 0.2 - e.pageX / w,
       offsetY = 0.2 - e.pageY / h,
       dy = e.pageY - h / 2,

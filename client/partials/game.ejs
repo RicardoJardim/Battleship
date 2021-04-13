@@ -186,7 +186,7 @@
 
     data() {
       return {
-        tableUs: []
+        tableUs: [],
       };
     },
 
@@ -196,8 +196,8 @@
       },
       update(ola) {
         this.tableUs = ola;
-      }
-    }
+      },
+    },
 
     // Mounted/Created Functions Of This Component
   });
@@ -206,7 +206,7 @@
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Vue.component("TableBoard2", {
     props: {
-      code: { type: Number, default: null }
+      code: { type: Number, default: null },
     },
 
     template: ` <div>
@@ -231,7 +231,7 @@
 
     data() {
       return {
-        tableTh: []
+        tableTh: [],
       };
     },
 
@@ -247,8 +247,8 @@
       select(args) {
         this.$emit("receivedata", args);
         //alert(args.y + " " + args.x);
-      }
-    }
+      },
+    },
   });
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Instância da VUE APP                                                                                        //
@@ -260,7 +260,7 @@
 
     data() {
       return {
-        code: null
+        code: null,
       };
     },
 
@@ -272,8 +272,8 @@
       remake(data) {
         this.$refs.tableBoard.update(data.grid.ships);
         this.$refs.fleeBoard.update(data.grid.shots);
-      }
-    }
+      },
+    },
 
     // Mounted/Created Functions
   });
@@ -286,7 +286,6 @@
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function dataToVue(gameState) {
-    console.log(gameState);
     if (gameState.turn == true) {
       $("#turnsMe").html("- Your turn");
     } else {
@@ -296,13 +295,11 @@
   }
 
   function sendShotss(data) {
-    console.log(data);
     socket.emit("shot", data);
   }
 
   function changeTh(data) {
     var x = data.pos.y + "" + data.pos.x;
-    console.log(x);
     if (data.success == true) {
       $("#tm" + x).addClass("d");
       $("#turnsMe").html("- Your turn");
@@ -316,7 +313,6 @@
   }
   function changeMe(data) {
     var x = data.pos.y + "" + data.pos.x;
-    console.log(x);
     if (data.success == true) {
       $("#me" + x).addClass("d");
       $("#turnsTm").html("- Opponent turn");
@@ -337,7 +333,7 @@
     y.play();
   }
 
-  $("#leaveGame").click(function() {
+  $("#leaveGame").click(function () {
     location.reload();
   });
 </script>

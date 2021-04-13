@@ -35,6 +35,8 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
     />
+
+    <script src="/client/scripts/utils.js"></script>
   </head>
 
   <body>
@@ -73,7 +75,7 @@
                           />
                           Vertical
                         </label>
-                        <br>
+                        <br />
                         <label class="radio">
                           <input
                             type="radio"
@@ -86,10 +88,8 @@
                         </label>
                       </div>
                     </div>
-                    <button class="button"
-                      @click="startTheGame"
-                       >Save</button>
-                      <button id="voltar" class="button">Go back</button>
+                    <button class="button" @click="startTheGame">Save</button>
+                    <button id="voltar" class="button">Go back</button>
                   </div>
                 </div>
               </div>
@@ -125,7 +125,7 @@
       Vue.component("TableBoard", {
         props: {
           lengthTable: { type: Number, default: 10 },
-          orientation: { type: String, default: "H" }
+          orientation: { type: String, default: "H" },
         },
 
         template: ` <div class="tablediv">
@@ -159,8 +159,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 1,
@@ -174,8 +174,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 2,
@@ -189,8 +189,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 3,
@@ -204,8 +204,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 4,
@@ -219,8 +219,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 5,
@@ -234,8 +234,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 6,
@@ -249,8 +249,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 7,
@@ -264,8 +264,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 8,
@@ -279,8 +279,8 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
+                  { x: 9, me: false },
+                ],
               },
               {
                 y: 9,
@@ -294,14 +294,14 @@
                   { x: 6, me: false },
                   { x: 7, me: false },
                   { x: 8, me: false },
-                  { x: 9, me: false }
-                ]
-              }
+                  { x: 9, me: false },
+                ],
+              },
             ],
             ship: {
               id: 0,
-              length: 0
-            }
+              length: 0,
+            },
           };
         },
 
@@ -347,8 +347,8 @@
                   }
                 }
               }
-              this.columns.map(column => {
-                return column.rows.map(row => {
+              this.columns.map((column) => {
+                return column.rows.map((row) => {
                   row.me = row.idShip === this.ship.id ? false : row.me;
                   row.idShip =
                     row.idShip === this.ship.id ? undefined : row.idShip;
@@ -364,8 +364,8 @@
                 }
               }
             }
-          }
-        }
+          },
+        },
       }),
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // FIM DO COMPONENTE                                                                                           //
@@ -376,7 +376,7 @@
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Vue.component("FleetBoard", {
           props: {
-            ships: { type: Array, default: [] }
+            ships: { type: Array, default: [] },
           },
 
           template: ` <div class="fleet">
@@ -393,7 +393,7 @@
 
           data() {
             return {
-              selectedShip: 0
+              selectedShip: 0,
             };
           },
 
@@ -407,8 +407,8 @@
             },
             imageUrl(img) {
               return "https://i.ibb.co/" + img;
-            }
-          }
+            },
+          },
         }),
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // FIM DO COMPONENTE                                                                                           //
@@ -430,10 +430,10 @@
                 { id: 2, src: "PC0cnNX/ship2.png", length: 2 },
                 { id: 3, src: "GkKMd0Z/ship3.png", length: 3 },
                 { id: 4, src: "d7yvrDd/ship4.png", length: 4 },
-                { id: 5, src: "wW2n8Mx/ship5.png", length: 5 }
+                { id: 5, src: "wW2n8Mx/ship5.png", length: 5 },
               ],
               orientation: "H",
-              ships: []
+              ships: [],
             };
           },
 
@@ -454,7 +454,7 @@
                     let ship = {
                       x: x,
                       y: y,
-                      id: this.$refs.tableBoard.columns[y].rows[x].idShip
+                      id: this.$refs.tableBoard.columns[y].rows[x].idShip,
                     };
                     fleet.push(ship);
                   }
@@ -466,44 +466,42 @@
               } else {
                 alert("We must select all of our ships for this battle");
               }
-            }
-          }
+            },
+          },
         });
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       // SCRIPTS EXTERNOS AO VUE                                                                                     //
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      var token = localStorage.getItem("authorization");
+      let token = getCookie("authorization");
 
       function save(da) {
         console.log(da);
       }
 
       function saveParams(sad) {
-        var email = localStorage.getItem("email");
+        let email = getCookie("email");
+
         socket = io.connect();
         socket.emit("ships", email, sad);
-        socket.on("ships", function(data) {
-          console.log(data);
+        socket.on("ships", function (data) {
           if (data.success == true) {
-            window.location = "/chose/" + token.substring(0, 5);
+            window.location = "/choose/" + token;
           }
         });
       }
 
-      console.log(token);
-      $("#voltar").click(function() {
-        window.location = "/chose/" + token.substring(0, 5);
+      $("#voltar").click(function () {
+        window.location = "/choose/" + token;
       });
     </script>
 
     <style scoped>
-      html{
+      html {
         overflow: hidden;
       }
       #app {
         height: 100vh;
         background-image: url(https://i.imgur.com/MM7wYMQ.jpg);
-       
       }
       .v-application--wrap {
         height: 100vh;
@@ -529,21 +527,20 @@
         padding: 50px;
         padding-top: 20px;
         padding-bottom: 10px;
-        background-color: rgb(255, 255, 255,0.85);
-        border-radius: 8px 8px  0 0;
+        background-color: rgb(255, 255, 255, 0.85);
+        border-radius: 8px 8px 0 0;
         width: 60%;
         margin: 2% 0 0 20%;
         padding: 2%;
-   
       }
 
       .box2 {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: rgb(255, 255, 255,0.85);
+        background-color: rgb(255, 255, 255, 0.85);
         width: 60%;
-        border-radius: 0 0 8px 8px  ;
+        border-radius: 0 0 8px 8px;
         margin-left: auto;
         margin-right: auto;
         padding-bottom: 1%;
@@ -631,7 +628,7 @@
 
       .table > thead > tr > td {
         border: 1px solid black;
-        background:rgb(65, 103, 226);
+        background: rgb(65, 103, 226);
         color: white;
         text-align: center;
         vertical-align: middle;
@@ -641,7 +638,7 @@
 
       .table > tbody > tr > td.h {
         border: 1px solid black;
-        background:rgb(65, 103, 226);
+        background: rgb(65, 103, 226);
         color: white;
         text-align: center;
         vertical-align: middle;
@@ -658,8 +655,8 @@
       .table > tbody > tr > td.b:hover {
         background: rgb(65, 103, 226);
       }
-    
-      .iniciar a{
+
+      .iniciar a {
         background: #123;
         transition: all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
         border: 4px solid #fff;
@@ -670,11 +667,12 @@
         font-weight: 800;
         cursor: pointer;
       }
-      .iniciar a:hover, a:active {
+      .iniciar a:hover,
+      a:active {
         background-color: red;
       }
 
-      .button{
+      .button {
         background: #123;
         transition: all 0.35s cubic-bezier(0.37, 0.26, 0.35, 1);
         border: 4px solid #fff;
@@ -685,18 +683,17 @@
         cursor: pointer;
       }
 
-      .button:hover{
+      .button:hover {
         background-color: red;
       }
 
-      .control{
+      .control {
         padding-left: 10%;
       }
 
-      .radio input{
-       width: 20px;
+      .radio input {
+        width: 20px;
       }
     </style>
   </body>
-  
 </html>

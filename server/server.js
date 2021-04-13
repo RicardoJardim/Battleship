@@ -1,11 +1,11 @@
 //Modulos principais
-var express = require("express");
-var path = require("path");
-var http = require("http");
-var bodyParser = require("body-parser");
-var ejs = require("ejs");
-var socketio = require("socket.io");
-var urlParser = bodyParser.urlencoded({ extended: false });
+const express = require("express");
+const path = require("path");
+const http = require("http");
+const bodyParser = require("body-parser");
+const ejs = require("ejs");
+const socketio = require("socket.io");
+const urlParser = bodyParser.urlencoded({ extended: false });
 
 //Encryptação de mensagens
 var Entities = require("html-entities").AllHtmlEntities;
@@ -25,39 +25,39 @@ const gameController = require("./controller/GameController");
 const gridController = require("./controller/GridController");
 
 //Utils
-var mongoUtil = require("./utils/mongoConnection");
+const mongoUtil = require("./utils/mongoConnection");
 
 //Atribuições
-var app = express();
+const app = express();
 app.use(express.json());
 
-var server = http.Server(app);
+const server = http.Server(app);
 
-var io = socketio(server);
+const io = socketio(server);
+
+const clientPath = path.join(__dirname, "../client");
 
 app.use(urlParser);
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../client"));
+app.set("views", clientPath);
+app.use("/client", express.static(clientPath));
 
-console.log("Server is running");
-
-//Variáveis
+//variáveis
 
 var users = {};
 var gameIdCounter = 1;
-const connections = [];
 
-io.sockets.on("connection", socket => {
+io.sockets.on("connection", (socket) => {
   console.log(new Date().toISOString() + " ID " + socket.id + " connected.");
 
-  socket.on("join", function(nome, email, points, boats) {
+  socket.on("join", function (nome, email, points, boats) {
     users[socket.id] = {
       points: points,
       username: nome,
       ships: boats,
       email: email,
       inGame: null,
-      player: null
+      player: null,
     };
     var gameRoom = "game" + gameIdCounter;
     socket.join(gameRoom);
@@ -95,7 +95,7 @@ io.sockets.on("connection", socket => {
 
       io.to("game" + game.id).emit("changePage", {
         success: true,
-        gameID: game.id
+        gameID: game.id,
       });
       gameIdCounter++;
 
@@ -106,23 +106,23 @@ io.sockets.on("connection", socket => {
   });
 
   //SAIR DA ESPERA
-  socket.on("leaveWaiting", function() {
+  socket.on("leaveWaiting", function () {
     delete users[socket.id];
   });
 
   //QUANDO SAI DO JOGO FAZ UPDATE NOS PONTOS
-  socket.on("opponentleft", function(data) {
+  socket.on("opponentleft", function (data) {
     userController.updatePoints(
       { email: users[data.id].email },
       { points: parseInt(users[data.id].points) + 100 },
-      function(result) {
+      function (result) {
         saveGame(users[data.id].inGame);
       }
     );
   });
 
   //QUANDO DISCONECTA VERIFICA SE TA EM JOGO
-  socket.on("disconnect", function() {
+  socket.on("disconnect", function () {
     console.log(
       new Date().toISOString() + " ID " + socket.id + " disconnected."
     );
@@ -135,7 +135,7 @@ io.sockets.on("connection", socket => {
     delete users[socket.id];
   });
   //CHAT ENTRE OS JOGADORES
-  socket.on("chat", function(msg) {
+  socket.on("chat", function (msg) {
     if (users[socket.id].inGame !== null && msg) {
       console.log(
         new Date().toISOString() +
@@ -148,19 +148,19 @@ io.sockets.on("connection", socket => {
       // Send message to opponent
       socket.broadcast.to("game" + users[socket.id].inGame.id).emit("chat", {
         name: "Opponent",
-        message: entities.encode(msg)
+        message: entities.encode(msg),
       });
 
       // Send message to self
       io.to(socket.id).emit("chat", {
         name: "Me",
-        message: entities.encode(msg)
+        message: entities.encode(msg),
       });
     }
   });
 
   //SHOT VER ISTO {y:y, x:x}
-  socket.on("shot", function(position) {
+  socket.on("shot", function (position) {
     var game = users[socket.id].inGame;
     console.log(game);
     if (game !== null) {
@@ -177,12 +177,12 @@ io.sockets.on("connection", socket => {
           checkGameOver(game);
           io.to(socket.id).emit("updateGrid", {
             pos: position,
-            success: obj.savedStatus
+            success: obj.savedStatus,
           });
 
           io.to(game.getPlayerId(opponent)).emit("updateGridMe", {
             pos: position,
-            success: obj.savedStatus
+            success: obj.savedStatus,
           });
 
           console.log("-------------------------------------");
@@ -192,15 +192,15 @@ io.sockets.on("connection", socket => {
   });
 
   //ESCOLHA DA POSIÇÂO DOS BARCOS -> GAURDA NA DB A MODIFICAÇÂO OU ENTAO CRIA UM
-  socket.on("ships", function(email, boats) {
+  socket.on("ships", function (email, boats) {
     console.log("BOATS");
     console.log(boats);
-    gridController.findGrid(email, function(data) {
+    gridController.findGrid(email, function (data) {
       console.log(data);
       if (data.success == true) {
         console.log("update");
 
-        gridController.updateGrid(email, boats, function(data) {
+        gridController.updateGrid(email, boats, function (data) {
           console.log(data);
 
           if (data.success == true) {
@@ -208,13 +208,14 @@ io.sockets.on("connection", socket => {
           }
         });
       } else {
-        gridController.registerGrid({ email: email, ships: boats }, function(
-          data
-        ) {
-          if (data.success == true) {
-            io.to(socket.id).emit("ships", { success: true });
+        gridController.registerGrid(
+          { email: email, ships: boats },
+          function (data) {
+            if (data.success == true) {
+              io.to(socket.id).emit("ships", { success: true });
+            }
           }
-        });
+        );
       }
     });
   });
@@ -222,46 +223,85 @@ io.sockets.on("connection", socket => {
 
 //Routes
 
+//Views
 app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/chose/:token", (req, res) => {
-  if (req.params.token) {
-    res.render("Bewteen");
-  }
+app.get("/choose/:token", auth.params, (req, res) => {
+  res.render("Bewteen");
 });
 
 //Retorna todos os utilizadores
-app.get("/users", auth, (req, res) => {
-  userController.getAllUsers(function(result) {
+app.get("/users", auth.header, (req, res) => {
+  userController.getAllUsers(function (result) {
     res.json(result);
   });
 });
 
-app.get("/ships/:email", auth, (req, res) => {
-  gridController.findGrid(req.params.email, function(result) {
+app.get("/ships/:email", auth.header, (req, res) => {
+  gridController.findGrid(req.params.email, function (result) {
     res.json(result);
   });
 });
 
 //Verifica se está ativo para realizar logout
-app.post("/user/logged", auth, (req, res) => {
-  userController.verifyLogged(req.body, function(result) {
+app.post("/user/logged", auth.header, (req, res) => {
+  userController.verifyLogged(req.body, function (result) {
+    res.cookie("username", "", {
+      maxAge: -1,
+      httpOnly: false,
+      path: "/",
+    });
+    res.cookie("points", "", {
+      maxAge: -1,
+      httpOnly: false,
+      path: "/",
+    });
+    res.cookie("email", "", {
+      maxAge: -1,
+      httpOnly: false,
+      path: "/",
+    });
+    res.cookie("authorization", "", {
+      maxAge: -1,
+      httpOnly: false,
+      path: "/",
+    });
     res.json(result);
   });
 });
 
 //REGISTO
 app.post("/register", (req, res) => {
-  userController.registerAuth(req.body, function(result) {
+  userController.registerAuth(req.body, function (result) {
     if (result.success == false) {
       res.json(result);
     } else {
+      res.status(201);
+      res.cookie("username", result.data.name, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      res.cookie("points", result.data.points, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      res.cookie("email", result.data.email, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      res.cookie("authorization", result._token, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+
       res.json({
         success: true,
-        authorization: result._token,
-        data: result.data
       });
     }
   });
@@ -269,32 +309,54 @@ app.post("/register", (req, res) => {
 
 //LOGIN
 app.post("/login", (req, res) => {
-  userController.loginAuth(req.body, function(result) {
+  userController.loginAuth(req.body, function (result) {
     if (result.success == false) {
       res.json(result);
     } else {
+      res.cookie("username", result.data.name, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      res.cookie("points", result.data.points, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      res.cookie("email", result.data.email, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      res.cookie("authorization", result._token, {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
       res.json({
         success: result.success,
         authorization: result._token,
-        data: result.data
+        data: result.data,
       });
     }
   });
 });
 
-app.get("/verify", auth, (req, res) => {
+app.get("/verify", auth.header, (req, res) => {
   res.json({ success: true });
+  /* res.header("Authorization", req.headers["authorization"]);
+  res.redirect("/choose"); */
 });
 
-app.get("/user/:email", auth, (req, res) => {
-  userController.findPoints(req.params.email, function(data) {
+app.get("/user/:email", auth.header, (req, res) => {
+  userController.findPoints(req.params.email, function (data) {
     res.json({ data: data.data.points });
   });
 });
 
 app.get("/leaderboard/:token", (req, res) => {
   if (req.params.token) {
-    userController.orderPoints(function(result) {
+    userController.orderPoints(function (result) {
       res.render("leaderboard", { data: result });
     });
   }
@@ -307,9 +369,14 @@ app.get("/placeships/:token", (req, res) => {
 });
 
 //Conexão a base de dados
+
+// brew services start mongodb-community@4.4
+
+// brew services stop mongodb-community@4.4
+
 //Instancia o servidor
-mongoUtil.connectToServer(function(err) {
-  server.listen(8080, function() {
+mongoUtil.connectToServer(function (err) {
+  server.listen(8080, function () {
     console.log("Chatroom listening on port 8080");
   });
 });
@@ -333,14 +400,14 @@ function leaveGame(socket) {
     socket.broadcast
       .to("game" + users[socket.id].inGame.id)
       .emit("notification", {
-        message: "Opponent has left the game"
+        message: "Opponent has left the game",
       });
 
     // NOTIFICA QUE GANHOU O JOGO
     socket.broadcast
       .to("game" + users[socket.id].inGame.id)
       .emit("opponentleft", {
-        message: "You Won the game and 100 points"
+        message: "You Won the game and 100 points",
       });
 
     if (users[socket.id].inGame.gameStatus != GameStatus.gameOver) {
@@ -382,5 +449,5 @@ function getClientsInRoom(string) {
 }
 
 function saveGame(body) {
-  gameController.registerGame(body, function(data) {});
+  gameController.registerGame(body, function (data) {});
 }

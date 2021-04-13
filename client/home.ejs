@@ -16,6 +16,9 @@
     />
 
     <title>Battleship</title>
+    <script src="/client/scripts/utils.js"></script>
+    <script src="/client/scripts/home.js"></script>
+
     <script type="text/javascript">
       window.history.forward();
       function noBack() {
@@ -33,7 +36,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      height: 100vh;
+      height: 100%;
     }
     .test {
       margin-top: 0%;
@@ -47,22 +50,36 @@
       text-shadow: rgb(0, 0, 0) 2px 2px 2px;
     }
     .body .container_test {
-      margin-left: auto;
-      margin-right: auto;
+      margin: auto;
       display: flex;
       width: 80%;
     }
+    #topBtn > span {
+      cursor: pointer;
+      font-size: 1.1em;
+      color: white;
+      padding: 15px 10px 15px 10px;
+      border-radius: 50%;
+    }
+    #cancel {
+      background-color: #c62828;
+    }
+    #start {
+      background-color: #43a047;
+    }
   </style>
 
-  <body>
-    <audio autoplay id="myAudio">
-      <source
-        src="https://dc552.4shared.com/img/gvYdGGq_ea/1fb2fd08/dlink__2Fdownload_2FgvYdGGq_5Fea_2Fsound.mp3_3Fsbsr_3Dea46b84a7888e9382d511b1e3fe05d00a32_26bip_3DMTkzLjEzNi4yMzIuNA_26lgfp_3D52_26bip_3DMTkzLjEzNi4yMzIuNA/preview.mp3"
-        type="audio/mpeg"
-      />
+  <body style="height: 100vh; overflow: hidden">
+    <audio autoplay loop id="myAudio">
+      <source src="/client/audio/main.mp3" type="audio/mpeg" />
     </audio>
 
     <div class="body">
+      <div id="topBtn" style="padding-left: 20px; padding-top: 20px">
+        <span id="start">Start</span>
+
+        <span id="cancel">Stop</span>
+      </div>
       <h1 class="test">Age of BattleShips 2</h1>
       <div class="container_test">
         <%- include('partials/user_partial') %> <%-
@@ -70,174 +87,4 @@
       </div>
     </div>
   </body>
-  <script>
-    var x = document.getElementById("myAudio");
-    console.log(x);
-    $("#user_btn").click(sendLogin);
-    $("#register_btn").click(sendRegister);
-    setInterval(function() {
-      playAudio2();
-    }, 10);
-
-    function sendRegister() {
-      changeroute();
-      var not_empty = [];
-      var valid = [];
-
-      valores = [];
-      elementos = [];
-
-      valores.push(
-        form_regist.Username.value,
-        form_regist.email.value,
-        form_regist.password.value
-      );
-      elementos.push(
-        form_regist.Username,
-        form_regist.email,
-        form_regist.password
-      );
-
-      removeMessages(".form-label-group");
-      valid.push(validString(form_regist.Username.value, form_regist.Username));
-      valid.push(validateEmail(form_regist.email.value, form_regist.email));
-      valid.push(validString(form_regist.password.value, form_regist.password));
-
-      for (var i = 0; i < valores.length; i++) {
-        not_empty.push(validateEmpty(valores[i], elementos[i]));
-      }
-
-      if (valid.reduce(and) && not_empty.reduce(and)) {
-        console.log("entrou");
-
-        var content = {
-          name: form_regist.Username.value,
-          email: form_regist.email.value,
-          password: form_regist.password.value
-        };
-        postData("/register", content);
-      }
-    }
-
-    function sendLogin() {
-      changeroute();
-      var not_empty = [];
-      var valid = [];
-
-      valores = [];
-      elementos = [];
-
-      valores.push(form_login.email.value, form_login.password.value);
-      elementos.push(form_login.email, form_login.password);
-
-      removeMessages(".form-label-group");
-      valid.push(validateEmail(form_login.email.value, form_login.email));
-      valid.push(validString(form_login.password.value, form_login.password));
-
-      for (var i = 0; i < valores.length; i++) {
-        not_empty.push(validateEmpty(valores[i], elementos[i]));
-      }
-
-      if (valid.reduce(and) && not_empty.reduce(and)) {
-        console.log("entrou");
-        var content = {
-          email: form_login.email.value,
-          password: form_login.password.value
-        };
-        postData("/login", content);
-      }
-    }
-
-    function postData(url, content) {
-      console.log(content);
-      $.post(url, content, function(data) {
-        if (data.success == false) {
-          alert(data.message);
-        } else {
-          localStorage.setItem("username", data.data.name);
-          localStorage.setItem("points", data.data.points);
-          localStorage.setItem("email", data.data.email);
-          localStorage.setItem("authorization", data.authorization);
-          changeroute();
-          //VAI BUSCAR
-          // console.log(localStorage.getItem("authorization"));
-        }
-        console.log(data);
-      });
-    }
-
-    function validateEmpty(content, element) {
-      if (content == "") {
-        $(element).css("background", "#ffcccc");
-        $(element).attr("placeholder", "Campo abrigatório");
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    function validateEmail(content, element) {
-      if (!content.match(/^[a-zA-Z0-9._]*@[a-z]*\.(com|pt|org)$/)) {
-        $(element).css("background-color", "#ebdf5e");
-        $(element).after(
-          '<p style="color:#c2b100"> Formatação de email incorrecta </p>'
-        );
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    function validString(content, element) {
-      if (!content.match(/^[a-zA-Z0-9]+/)) {
-        $(element).css("background-color", "#ebdf5e");
-        $(element).after(
-          '<p style="color:red;margin:0px"> Formatação de campo incorrecta </p>'
-        );
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    function and(a, b) {
-      return a && b;
-    }
-
-    function removeMessages(string) {
-      $(string)
-        .children()
-        .filter("p")
-        .remove();
-    }
-    function changeroute() {
-      var token = localStorage.getItem("authorization");
-      if (token) {
-        $.ajax({
-          url: "/verify",
-          async: true,
-          type: "GET",
-          headers: {
-            authorization: token
-          },
-          success: function(data) {
-            console.log(data);
-            if (data.success == true) {
-              window.location = "/chose/" + token.substring(0, 5);
-            }
-          },
-          error: function(data) {
-            console.log(data);
-          }
-        });
-      } else {
-        console.log("No permissions");
-        return;
-      }
-    }
-
-    function playAudio2() {
-      x.play();
-    }
-  </script>
 </html>

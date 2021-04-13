@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="/client/scripts/utils.js"></script>
 
     <link
       rel="stylesheet"
@@ -16,6 +17,7 @@
       type="image/x-icon"
       href="https://i.imgur.com/mvPmzAP.png"
     />
+
     <title>Battleship</title>
     <title>Document</title>
   </head>
@@ -163,10 +165,9 @@
   </body>
 
   <script>
-    var token = localStorage.getItem("authorization");
-    console.log(token);
-    $("#voltar").click(function() {
-      window.location = "/chose/" + token.substring(0, 5);
+    let token = getCookie("authorization");
+    $("#voltar").click(function () {
+      window.location = "/choose/" + token;
     });
   </script>
 </html>

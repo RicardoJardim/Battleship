@@ -1,14 +1,14 @@
 const mongo = require("mongodb");
-var MongoClient = mongo.MongoClient;
+const MongoClient = mongo.MongoClient;
 
 var _db;
 
 module.exports = {
-  connectToServer: function(callback) {
+  connectToServer: function (callback) {
     MongoClient.connect(
       "mongodb://localhost:27017/",
       { useUnifiedTopology: true },
-      function(err, client) {
+      function (err, client) {
         if (!err) {
           console.log("Connected to database");
           if (err) throw err;
@@ -18,7 +18,7 @@ module.exports = {
       }
     );
   },
-  getDB: function() {
+  getDB: function () {
     return _db;
-  }
+  },
 };
