@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const socketio = require("socket.io");
 const urlParser = bodyParser.urlencoded({ extended: false });
+const cors = require("cors");
 
 //Encryptação de mensagens
 var Entities = require("html-entities").AllHtmlEntities;
@@ -13,6 +14,18 @@ var entities = new Entities();
 
 //Middleware
 const auth = require("./middleware/auth");
+
+//CORS
+const allowlist = ["http://localhost:8080"];
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true };
+  } else {
+    corsOptions = { origin: false };
+  }
+  callback(null, corsOptions);
+};
 
 //Game
 
@@ -29,6 +42,7 @@ const mongoUtil = require("./utils/mongoConnection");
 
 //Atribuições
 const app = express();
+app.use(cors(corsOptionsDelegate));
 app.use(express.json());
 
 const server = http.Server(app);
